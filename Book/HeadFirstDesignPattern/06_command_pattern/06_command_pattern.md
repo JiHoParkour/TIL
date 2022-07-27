@@ -90,3 +90,69 @@ class GarageDoor {
 4. **주문서**는 **주방장**이 어떤 음식을 만들어야 하는지 지시한다. makeBurger(), makeShake()
 
    → **커맨드 객체**는 **리시버**에 있는 행동 메소드를 호출한다. actionA(), actionB()
+
+## 커맨드 객체 만들기
+
+커맨드 객체는 모두 같은 인터페이스를 구현해야 한다. execute()라는 메소드 하나만 있으면 됨
+
+```swift
+protocol Command {
+	func execute()
+}
+```
+
+조명을 켤 때 필요한 **커맨드 클래스**
+
+```swift
+class LightOnCommand: Command { // 커맨트 프로토콜 구현
+	var light: Light!
+
+	init (light: Light) { // 이 커맨드 객체로 제어할 특정 조명을 전달 받음
+		self.light = light	
+	}
+
+	func execute() {
+		light.on()
+	}
+}
+```
+
+## 커맨드 객체 사용하기
+
+커맨드 객체를 사용할 슬롯이 하나만 있는 리모컨을 구현하자
+
+```swift
+class SimpleRemoteControl {
+	var slot: Command?
+	
+	init () { }
+
+	func setCommand(command: Command) {
+		slot = command
+	}
+
+	func buttonWasPressed() {
+		slot?.execute()
+	}
+	
+}
+```
+
+리모컨을 사용해보자
+
+```swift
+class RemoteControlTest {
+	let remote: SimpleRemoteControl = SimpleRemoteControl() //인보커
+	let light: Light = Light() //리시버
+	let lightOn: LightOnCommand = LightOnCommand(light: light) //커맨드 객체
+
+	remote.setCommand(lightOn)
+	remote.buttonWasPressed()
+}
+```
+
+## 커맨드 패턴의 정의
+
+커맨드 패턴은 요청 내역을 객체로 캡슐화 한다. 서로 다른 요청 내역마다 객체화 돼서 매개변수화 할 수 있다. 덕분에 요청을 큐에 저장하거나 로그로 기록, 작업 취소 등을 할 수 있게됨
+
+커맨드 객체에는 행동과 일을 처리하는 리시버가 캡슐화 되어있어 외부에서는 execute()를 호출하면 요청이 처리 된다는 것만 알 수 있음
