@@ -201,3 +201,156 @@ let myTuple: AliasTuple = (93000.0, 100200.0)
 참조란 메모리에 접근 할 수 있는 주소 같은거라고 알고 있었는데 인스턴스가 아니라 참조가 변경된다고 하네 계속 읽어보자
 
 두 타입의 차이점을 알고 각각의 장점과 사용 시 주의 사항을 알아보자
+
+```swift
+/// 참조타입과 값타입의 차이
+class ReferenceType {
+    var name: String
+    var assignment: String
+    var grade: Int
+    
+    init(name: String, assignment: String, grade: Int) {
+        self.name = name
+        self.assignment = assignment
+        self.grade = grade
+    }
+}
+
+struct ValueType {
+    var name: String
+    var assignment: String
+    var grade: Int
+}
+
+var ref = ReferenceType(name: "Jiho", assignment: "Coding Test", grade: 90)
+var val = ValueType(name: "Jiho", assignment: "Coding Test", grade: 90)
+
+func extraCreditReferenceType(ref: ReferenceType, extraCredit: Int) {
+    let ref2 = ref //원본의 참조 전달 
+    ref2.grade += extraCredit
+}
+
+func extraCreditValueType(val: ValueType, extraCredit: Int) {
+    var val2 = val //원본의 복사본 전달
+    val2.grade += extraCredit
+}
+
+extraCreditReferenceType(ref: ref, extraCredit: 5)
+print("Reference: \(ref.name) - \(ref.grade)") //Reference: Jiho - 95
+
+extraCreditValueType(val: val, extraCredit: 5)
+print("Value: \(val.name) - \(val.grade)") //Value: Jiho - 90
+```
+
+값 타입 인스턴스는 원본의 복사본이 전달돼서 예기치 못한 참조로부터 값이 변경되는 일을 방지 할 수 있겠구나
+
+참조 타입을 사용하면서 마주칠 수 있는 문제상황을 보자
+
+```swift
+/// 참조타입을 사용할 때 마주칠 수 있는 문제 상황
+func getGradeForAssignment(assignment: ReferenceType) {
+    let num = Int(arc4random_uniform(20) + 80)
+    assignment.grade = num
+    print("Grade for \(assignment.name) is \(num)")
+}
+
+var csGrades = [ReferenceType]()
+var students = ["Jiho", "Hojin", "Dew", "Nuri"]
+var csAssignment = ReferenceType(name: "", assignment: "CsAssignment", grade: 0)
+
+for student in students {
+    csAssignment.name = student
+    getGradeForAssignment(assignment: csAssignment)
+    csGrades.append(csAssignment) //배열에 원본의 참조를 전달
+	//Grade for Jiho is 80
+	//Grade for Hojin is 99
+	//Grade for Dew is 82
+	//Grade for Nuri is 96
+}
+
+for assignment in csGrades {
+    print("\(assignment.name): grade \(assignment.grade)")
+	//Nuri: grade 96
+	//Nuri: grade 96
+	//Nuri: grade 96
+	//Nuri: grade 96
+}
+```
+
+csGrades배열에 Nuri의 점수밖에 없는 이유는 참조타입인 csAssignment를 하나 생성 후 계속 같은 인스턴스를 업데이트 하면서 덮어 썼기 때문. csGrades 의 모든 참조는 같은 ReferenceType 인스턴스를 가리키고 있음
+
+값 타입을 이용해서 올바르게 동작하도록 바꿀 수 있음
+
+inout 매개변수와 &기호를 이용
+
+inout매개변수는 값 타입의 매개변수를 변경 할 수 있게 해주고 함수 호출이 끝나더라도 변경 사항을 유지해줌
+
+inout이라는 이름처럼 함수의 매개변수로 들어온 인자를 함수 내부에서 변경 후 함수 바깥으로 전달한다.
+
+&기호는 값 타입의 참조를 전달하겠다는 뜻. inout과 함께 쓰이는구나
+
+```swift
+/// 참조타입을 사용할 때 마주칠 수 있는 문제 상황을 값타입을 이용해서 해결
+/// inout - & 키워드 사용
+func getGradeForAssignment(assignment: inout ValueType) {
+    let num = Int(arc4random_uniform(20) + 80)
+    assignment.grade = num
+    print("Grade for \(assignment.name) is \(num)")
+}
+
+var csGrades = [ValueType]()
+var students = ["Jiho", "Hojin", "Dew", "Nuri"]
+var csAssignment = ValueType(name: "", assignment: "CsAssignment", grade: 0)
+
+for student in students {
+    csAssignment.name = student
+    getGradeForAssignment(assignment: &csAssignment) //inout - &
+    csGrades.append(csAssignment) //배열에 원본의 복사본을 전달
+	//Grade for Jiho is 97
+	//Grade for Hojin is 96
+	//Grade for Dew is 86
+	//Grade for Nuri is 82
+}
+
+for assignment in csGrades {
+    print("\(assignment.name): grade \(assignment.grade)")
+	//Jiho: grade 97
+	//Hojin: grade 96
+	//Dew: grade 86
+	//Nuri: grade 82
+}
+```
+
+위와 같이 작동 할 수 있는 이유는 csGrades배열에 csAssignment의 복사본을 추가했기 때문임. 그리고 복사본을 넣기 전에 getGradeForAssignment() 함수에 전달할 때는 값 타입일지라도 인스턴스 참조를 전달함. 덕분에 함수 내부에서 값 타입을 변경하고 함수 바깥으로 변경 사항을 전달 할 수 있었음
+
+이번엔 참조 타입(클래스)로만 가능한 작업을 몇 가지 알아보겠음
+
+## 참조 타입만을 위한 재귀적 데이터 타입
+
+재귀 = 자기 자신을 정의 할 때 자신을 재참조하다
+
+즉, 재귀적 데이터 타입은 (나와)같은 타입의 다른 값을 프로퍼티로 갖는 타입을 말함
+
+리스트나 트리 같은 동적 자료 구조를 정의 할 때 재귀적 데이터 타입 사용한다. 이런 동적 자료 구조는 런타임에 크기가 변동될 수 있음
+
+연결 리스트가 좋은 예. 연결 리스트는 서로 연결 된 노드의 그룹으로 각 노드는 다음 노드의 링크를 갖고 있음
+
+![https://hudi.blog/static/73d52eeadd7cd6786538357697f9fcae/d35da/01.png](https://hudi.blog/static/73d52eeadd7cd6786538357697f9fcae/d35da/01.png)
+
+참조 타입을 사용해 연결 리스트를 생성하면 아래와 같음
+
+```swift
+class LinkedListRefereneType {
+	var value: String
+	var next: LinkedListReferenceType? //(나와)같은 타입의 다른 값을 프로퍼티로 갖는다
+	init(value: String) {
+		self.value = value
+	}
+}
+```
+
+만약 값 타입(struct)를 사용해 연결 리스트를 구현하려고 하면 **error: cannot find type 'LinkedListReferenceType' in scope** 에러를 만날것. 스위프트에서 재귀적 값 타입을 불허함
+
+왜냐하면 값타입을 사용하면 next 프로퍼티에 원본이 아닌 복사본이 전달되서 각 노드들의 연결성이 생기지 않기 때문
+
+다음은 참조 타입(클래스)만 할 수 있는 상속을 알아보자
