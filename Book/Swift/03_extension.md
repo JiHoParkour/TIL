@@ -79,3 +79,153 @@ extension protocolA where Self: protocolNeed {
 protocolB와 protocolC모두 protocolA를 따르기 때문에 someMethod()가 추가되어야 하지만 where제약때문에 protocolNeed를 따르는 protocolB만 someMethod()를 전달 받을 수 있다.
 
 프로토콜 확장은 그룹 타입에 기능 추가할 때 사용해야 함. 단일 타입에 추가할 땐 프로토콜 확장보다는 단일 타입을 확장하는 것을 고려하자. 당연한말?
+
+## 문장 유효성
+
+문장의 유효성을 검사할 때 유용한 정규식(regex)을 사용하는 구조체를 프로토콜을 이용해서 구현할 것임
+
+한 번은 프로토콜 확장을 사용하지 않고, 다른 한 번은 프로토콜 확장을 사용해서 구현함으로써 프로토콜 확장이 어떤 이점이 있는지 보자
+
+```swift
+protocol TextValidation {
+	var regExMatchingString: String {get}
+	var regExFindMatchingString: String {get}
+	var validationMessage: String {get}
+	func validateString(str: String) -> Bool
+	func getMatchingString(str: String) -> String?
+}
+
+/// 프로토콜 확장을 사용하지 않고 채택만 하는 경우
+class AlphabeticValidation: TextValidation {
+	static let sharedInstance = AlphabeticValidation()
+	private init(){}
+	let regExFindMatchString = "^[a-zA-Z]{0,10}"
+	let validationMessage = "Can only contain Alpha characters"
+	var regExMatchingString: String {
+		get {
+			return regExFindMatchString + "$"
+		}
+	}
+	func validationString(str: String) -> Bool {
+		//...중복 코드
+	}
+	func getMatchingString(str: String) -> String? {
+		//...중복 코드
+	}
+}
+class NumericValidation: TextValidation {
+	static let sharedInstance = NumericValidation()
+	private init(){}
+	let regExFindMatchString = "^[0-9]{0,10}"
+	let validationMessage = "Can only contain Numeric characters"
+	var regExMatchingString: String {
+		get {
+			return regExFindMatchString + "$"
+		}
+	}
+	func validationString(str: String) -> Bool {
+		//...중복 코드
+	}
+	func getMatchingString(str: String) -> String? {
+		//...중복 코드
+	}
+}
+```
+
+프로토콜 확장을 사용하지 않고 유효성 타입마다 채택하면 코드가 중복된다. 그렇다고 중복 코드를 정의하는 슈퍼 클래스를 만들어서 클래스 계층을 생성하는것 외에는 대안이 없다.
+
+프로토콜 확장을 사용해서 중복 코드를 줄일 수 있다.
+
+```swift
+protocol TextValidation {
+	var regExMatchingString: String {get}
+	var validationMessage: String {get}
+}
+
+/// 프로토콜 확장
+extension TextValidation {
+	var regExMatchingString: String {
+		get {
+			return regExFindMatchString + "$"
+		}
+	}
+	func validationString(str: String) -> Bool {
+		//...중복 코드
+	}
+	func getMatchingString(str: String) -> String? {
+		//...중복 코드
+	}
+}
+
+class AlphabeticValidation: TextValidation {
+	static let sharedInstance = AlphabeticValidation()
+	private init(){}
+	let regExFindMatchString = "^[a-zA-Z]{0,10}"
+	let validationMessage = "Can only contain Alpha characters"
+}
+class NumericValidation: TextValidation {
+	static let sharedInstance = NumericValidation()
+	private init(){}
+	let regExFindMatchString = "^[0-9]{0,10}"
+	let validationMessage = "Can only contain Numeric characters"
+}
+```
+
+프로토콜 확장으로 TextValidation  프로토콜을 채택하는 모든 타입에 중복되는 기능을 추가했다.
+
+덕분에 싱글톤 패턴 구현부를 제외하면 각 유효성 검사 타입들의 중복 코드가 없어졌다.
+
+## 스위프트 표준 라이브러리 확장
+
+스위프트 표준 라이브러리는 대부분 구조체와 프로토콜로 이루어져 있다고 언급했다. 그렇다면 프로토콜 확장을 이용해서 스위프트 표준 라이브러리에 직접 기능을 추가할 수 있다는 말과 같다.
+
+```swift
+extension Int {
+	func factorial() -> Int {
+		var answer = 1
+		
+		for x in (1...self).reversed() {
+			answer *= x
+		}
+		return answer
+	}
+}
+
+print(5.factorial()) // 120(5*4*3*2*1)
+```
+
+factorial이라는 전역 함수를 생성하는 대신 Interger 타입 자체에 factorial함수를 추가했다.
+
+## Equatable 프로토콜 따르기
+
+확장을 통해 커스텀 타입이 Equatable프로토콜을 따르게 할 수 있다.
+
+Equtable프로토콜을 채택하면  ==나 !=연산자를 이용해 인스턴스를 쉽게 비교 할 수 있음
+
+```swift
+struct Person {
+	let name: String
+	let height: Double
+	let weight: Double
+}
+
+extension Person: Equatable {
+	static func ==(lhs: Person, rhs: Person) -> Bool {
+		return lhs.name == rhs.name &&
+		lhs.height == rhs.height &&
+		lhs.weight == rhs.weight
+	}
+}
+
+var jiho = Person(name: "Jiho", height: 173.0, weight: 79.1)
+var hulk = Person(name: "Hulk", height: 226.4, weight: 521.3)
+print(jiho == hulk) // false
+```
+
+Person타입에 직접 Equatable을 채택하지 않고 확장을 통해 채택하는 이유는 Equatable 프로토콜의 구현 코드가 해당 확장에 고립되어있어 코드를 읽고 유지하기 수월해서~
+
+## 요약
+
+과거 스위프트에선 구조체, 클래스, 열거형만 확장을 사용할 수 있었지만 스위프트2부터 프로토콜을 확장 할 수 있게 됨
+
+그만큼 프로토콜지향 프로그래밍에 프로토콜 확장은 중요하니 적절하게 잘 써야 함
