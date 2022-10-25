@@ -10,52 +10,6 @@
 
 &nbsp;
 
-**목차**
-
-[2장 Observables](#2장-Observables)
-
-​	[1. 옵저버블?](#1.-옵저버블?)
-
-​		[observable, observable sequence, sequence](#observable,-observable-sequence,-sequence)
-
-​		[marble diagram](#marble-diagram)
-
-​	[2. 옵저버블의 생애주기(LifeCycle of an observable)](#2.-옵저버블의-생애주기(LifeCycle-of-an-observable))
-
-​		[next, completed, error](#next,-completed,-error)
-
-​	[3. 옵저버블 만들기(Creating observables)](#3.-옵저버블-만들기(Creating-observables))
-
-​		[just, of, from, range](#just,-of,-from,-range)
-
-​	[4. 옵저버블 구독하기(Subscribing to observables)](#4.-옵저버블-구독하기(Subscribing-to-observables))
-
-​		[subscribe](#subscribe)
-
-​		[empty, never](#empty,-never)
-
-​	[5. 폐기 및 종료(Disposing and terminating)](#5.-폐기-및-종료(Disposing-and-terminating))
-
-​		[create](#create)
-
-​	[6. 옵저버블 팩토리 만들기(Creating observable factories)](#6.-옵저버블-팩토리-만들기(Creating-observable-factories))
-
-​		[deffered](#deffered)
-
-​	[7. 특성 사용하기(Using Traits)](#7.-특성-사용하기(Using-Traits))
-
-​		[Single, Maybe, Completable](#Single,-Maybe,-Completable)
-
-​	[8. 부수 효과 실행하기(Perform side effects)](#8.-부수-효과-실행하기(Perform-side-effects))
-
-​		[do](#do)
-
-​	[9. 디버그 정보 출력하기(Print debug info)](#9.-디버그-정보-출력하기(Print-debug-info))
-
-​		[debug](#debug)
-
-&nbsp;
-
 ## 1. 옵저버블?
 
 옵저버블은 rx의 심장이다. 어떻게 만들고 사용하는지 알아볼것임

@@ -10,42 +10,6 @@ RxSwift를 정의하자면 관찰 가능한 시퀀스(흐름)과 함수형 스�
 
 &nbsp;
 
-**목차**
-
-[1장 RxSwift](#1장-RxSwift)
-
-​	[1. 비동기 프로그래밍?](#1.-비동기-프로그래밍?)
-
-​		[비동기 프로그램 용어](#비동기-프로그램-용어)
-
-​		[상태, 특히 변경 가능한 공유된 데이터](#상태,-특히-변경-가능한-공유된-데이터)
-
-​		[명령형 프로그래밍](#명령형-프로그래밍)
-
-​		[부작용](#부작용)
-
-​		[선언형 프로그래밍](#선언형-프로그래밍)
-
-​		[반응형 시스템](#반응형-시스템)
-
-​	[2. RxSwift의 기원](#2.-RxSwift의-기원)
-
-​		[Observables](#Observables)
-
-​		[Operators](#Operators)
-
-​		[Schedulers](#Schedulers)
-
-​	[3. App Architecture](#3.-App-Architecture)
-
-​	[4. RxCocoa](#4.-RxCocoa)
-
-​	[5. RxSwift and Combine](#5-RxSwift-and-Combine)
-
-​	[6. Where to go from here?](#6-Where-to-go-from-here?)
-
-&nbsp;
-
 ##  1. 비동기 프로그래밍?
 
 앱에서 버튼에 반응하는 것, 텍스트필드를 탭 했을때 키패드가 올라오는 것, 이미지를 다운 받는 것, 음악을 듣는 것 등의 다양한 동작이 동시에 일어난다.
