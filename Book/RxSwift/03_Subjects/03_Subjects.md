@@ -1,4 +1,4 @@
-# 3. Subjects
+# 3장 Subjects
 
 앞 장에서 옵저버블이 무엇인지, 어떻게 만드는지, 어떻게 구독하는지 그리고 다 사용하고 어떻게 폐기하는지 배웠다. 옵저버블은 RxSwift의 근간이지만 본질적으로 값을 읽기만 할 수 있다. 다시 말해 옵저버블을 구독한 후 옵저버블이 생성하는 새로운 이벤트를 감지할 수 밖에 없다는 뜻이다.
 
@@ -6,7 +6,12 @@
 
 이번 장에서 RxSwift의 각기 다른 형태의 Subject를 알아보고 동작원리와 상황에 맞는 subject사용 예시를 볼것임. subject의 래퍼인 relay또한 알아보겠음
 
-## 시작하기
+&nbsp;
+
+[TOC]
+&nbsp;
+
+## 1. 시작하기
 
 ```swift
 let subject = PublishSubject<String>()
@@ -42,7 +47,11 @@ subject.onNext("2")
 
 subscribe 연산자와 비슷하게 on(.next(_:))는 subject에 새로운 next이벤트를 더하고 매개변수로 값을 전달하는 한다. 그리고 onNext()로 간편하게 쓸 수 있다.
 
-## ***\*What are subjects?\****
+&nbsp;
+
+&nbsp;
+
+## 2. What are subjects?
 
 subject는 옵저버블이자 옵저버이다. 바로 위에서 subject에 next이벤트를 전달하고 각 이벤트가 구독자에게 떻게 방출되는지 살펴보았다.
 
@@ -59,7 +68,11 @@ ReRelay는 RxCocoa가 의존하는 별개의 모듈이라는것을 알아두자.
 
 이제 subject와 relay가 어떻게 동작하는지 자세히 알아보자
 
-## Working with publish subjects
+&nbsp;
+
+&nbsp;
+
+## 3. Working with publish subjects
 
 ### PublishSubject
 
@@ -85,7 +98,11 @@ publish subject는 온라인 경매 앱 같은 시간에 민감한 데이터를 
 
 그리고 새 구독자에게 이전의 값을 재발행하지 않기 때문에 유저가 어떤걸 탭하거나 노티가 도착하는 이벤트를 다룰 때 좋다.
 
-## Working with behavior subjects
+&nbsp;
+
+&nbsp;
+
+## 4. Working with behavior subjects
 
 ### BehaviorSubject
 
@@ -101,7 +118,11 @@ BehaviorSubject는 최신 데이터로 뷰를 미리 채우고 싶을 때 유용
 
 만약 검색화면에서 최근 검색 5개 키워드 처럼 가장 마지막 값보다 더 많이 발행하고 싶다면 ReplaySubject가 좋은 선택이다.
 
-## Workimg with replay subjects
+&nbsp;
+
+&nbsp;
+
+## 5. Workimg with replay subjects
 
 ### BehaviorSubject
 
@@ -121,7 +142,11 @@ ReplaySubject를 사용할땐 버퍼가 메모리에 저장된다는걸 명심�
 
 publish, behavior, replay 세 가지 서브젝트로 원하는 대부분을 구현 할 수 있지만 구식으로 돌아가서 옵저버블 타입의 현재 값만 간단히 알고싶을때는 Relay가 제격이다.
 
-## Working with relays
+&nbsp;
+
+&nbsp;
+
+## 6. Working with relays
 
 ### ReplaySubject
 

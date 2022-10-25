@@ -1,10 +1,16 @@
-# 5. Filtering Operators
+# 5장 Filtering Operators
 
 새 기술 배우는건 고층 건물 짓는것과 같음. 지금까지 단단한 기반을 다졌다. 다시 말해 지금까진 RxSwift에 대한 기본적인 이해를 확립했다. 이젠 지식을 한 단계씩 레벨업시켜보자.
 
 이번 장에서는 RxSwift의 filtering operator에 대해 배울것임. filtering operator는 방출된 이벤트에 조건부 제한을 적용해서 subscriber가 다루길 원하는 것만 받게 할 수 있다. 스위프트 표준 라이브러리의 filter를 사용해봤다면 쉽게 이해할 수 있을 것임
 
-## Ignoring operators
+&nbsp;
+
+[TOC]
+
+&nbsp;
+
+## 1. Ignoring operators
 
 ### ignoreElements
 
@@ -40,6 +46,8 @@ You're out!
 
 ///1… ignoreElements 연산자로 인해 next(X) 이벤트는 무시되고 마지막 completed(혹은 error) 이벤트만 수신된다.
 
+&nbsp;
+
 ### elementAt
 
 만약 3번 째 스트라이크 같은 n번째 요소를 다루고 싶다면 elementAt을 사용할 수 있다. elementAt은 받고싶은 이벤트의 인덱스를 매개변수로 취하고 나머지는 이벤트는 모두 무시한다. 아래 다이어그램에서 확인 할 수 있듯이 ElementAt은 1번 인덱스만 전달하기때문에 2번 째 요소만 연산자를 통과하게 된다.
@@ -72,6 +80,8 @@ You're out!(onCompleted)
 
 /// 1... 인덱스 2 이벤트를 제외한 모든 이벤트를 무시하는 연산자를 적용했다. 따라서 3번 째 next이벤트를 수신할 것. 특이하게 곧바로 이어서 You're out! 콘솔에 출력된것을 확인 할 수 있는데 이는 elementAt 연산자가 해당 인덱스의 요소를 방출하자마자 구독이 종료되기 때문이다.
 
+&nbsp;
+
 ### filter
 
 ignoreElements와 elementAt은 observable에서 방출된 요소를 필터링한다. 만약 그 이상의 필터링을 원하면 filter 연산자를 사용하자. filter 연산자는 술어 클로저를 취해서 방출되는 모든 요소에 그걸 적용하고 조건에 true를 만족하는 요소들만 통과시킨다.
@@ -98,7 +108,11 @@ Observable.of(1, 2, 3, 4, 5, 6)
 */
 ```
 
-## ***\*Skipping operators\****
+&nbsp;
+
+&nbsp;
+
+## 2. Skipping operators
 
 ### skip
 
@@ -123,6 +137,8 @@ E
 F
 */
 ```
+
+&nbsp;
 
 ### skipWhile
 
@@ -156,6 +172,8 @@ Observable.of(2, 2, 3, 4, 4)
 
 지금까지는 정적 조건에 기반해서 필터링을 했다. 만약 다른 옵저버블에 기반해서 요소를 동적으로 필터링하고싶다면 몇 가지 방법이 있다.
 
+&nbsp;
+
 ### skipUntil
 
 첫 번째 방법은 skipUntil이다. skipUntil은 다른 트리거 옵저버블이 방출되기 전까지 구독하게 될 소스 옵저버블의 요소를 스킵한다. 아래 다이어그램에서 보이듯이 첫 번째 옵저버블의 요소는 두 번째 옵저버블이 방출될 때까지 스킵된다. 그 이후에는 스킵을 멈추고 모두 통과시킴
@@ -186,7 +204,11 @@ C
 */
 ```
 
-## ***\*Taking operators\****
+&nbsp;
+
+&nbsp;
+
+## 3. Taking operators
 
 ### take
 
@@ -212,11 +234,15 @@ Observable.of(1, 2, 3, 4, 5, 6)
 */
 ```
 
+&nbsp;
+
 ### takeWhile
 
 takeWhile 또한 skipWhile과 비슷하다. 대신 조건을 만족할 때까지 이벤트를 받는다.
 
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/ca67614f60cde2fbd6194a0ee8a6d3624b7faa709fc7de7da4a58ef75ec9d287/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/ca67614f60cde2fbd6194a0ee8a6d3624b7faa709fc7de7da4a58ef75ec9d287/original.png)
+
+&nbsp;
 
 ### enumerated
 
@@ -249,6 +275,8 @@ Observable.of(2, 2, 4, 4, 6, 6)
 /// 2… 튜플을 각각의 인수로 해체
 
 /// 3… 스위프트 표준라이브러리의 map과 같이 takeWhile에서 방출된 튜플에 접근해서 요소를 얻기위해 사용
+
+&nbsp;
 
 ### takeUntil
 
@@ -315,9 +343,13 @@ _ = someObservable
 
 self는 보통 ViewController나 ViewModel이 될것임. self가 deallocated되면서 takeUntil이 이벤트 수신을 멈추게 한다. 그 후 completed로 구독은 종료된다. 일반적으로는 disposeBag을 사용하는게 메모리 누수를 피하기 위한 안전한 방법임
 
-## ***\*Distinct operators\****
+&nbsp;
 
-## distinctUntilChanged
+&nbsp;
+
+## 4. Distinct operators
+
+### distinctUntilChanged
 
 다음 몇가지 연산자를 이용하면 중복된 연속 항목이 통과되는 것을 막을 수 있다. 아래 다이어그램에서 보이듯이 distinctUntilChanged는 각 요소 다음의 중복된 값만을 막는다. 그래서 두 번째 1은 통과한다.
 

@@ -1,4 +1,4 @@
-# 6. ***\*Filtering Operators in Practice\****
+# 6장 Filtering Operators in Practice
 
 이전 장에서 RxSwfit의 함수적인 측면을 소개했다. 처음 배운 연산자들은 옵저버블 시퀀스의 요소를 필터링하는데 도움을 주었다.
 
@@ -8,7 +8,13 @@
 
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/0e3758d602840a66753db5f810409f3406b0a7775000b08ad3ff007bf3eefd90/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/0e3758d602840a66753db5f810409f3406b0a7775000b08ad3ff007bf3eefd90/original.png)
 
-## ***\*Sharing subscriptions\****
+&nbsp;
+
+[TOC]
+
+&nbsp;
+
+## 1. Sharing subscriptions
 
 ### share
 
@@ -82,13 +88,19 @@ share는 구독자의 수가 0에서 1이 될 때만 새 구독을 생성한다.
 
 두 번째, 세 번째 등등의 구독자가 시퀀스를 관찰하기 시작할 때 share는 그들과 공유하기 위해 이미 생성된 구독을 사용한다. 만약 공유된 시퀀스에 대한 구독이 모두 폐기되면(더 이상 구독자가 없으면), share는 또한 공유된 시퀀스를 폐기할 것임. 만약 또 다른 구독자가 관찰을 시작하면, share는 언급했듯이 새로운 구독을 생성할 것임(기존에 공유된 구독이 없기 때문에)
 
+&nbsp;
+
 ### share(replay:scope:)
 
 share()는 기존 구독에 방출됐던 값을 새 구독에 제공하지 않는다. 다만 share(replay:scope:)는 마지막으로 방출된 값의 버퍼를 유지하고 새로운 구독이 발생할 때 관찰자에게 제공할 수 있다.
 
 share 연산자에 대한 경험 법칙은 완료되지 않는 옵저버블 혹은 완료 후 새 구독이 발생하지 않는걸 보장 할 수 없을 때 share 연산자를 사용하는 것이 안전하다는 것이다. 마음이 편하고 싶으면 share(replay: 1)을 사용하자.
 
-## ***\*Ignoring all elements\****
+&nbsp;
+
+&nbsp;
+
+## 2. Ignoring all elements
 
 ### ignoreElements와 completable
 
@@ -96,7 +108,11 @@ ignoreElements() 연산자는 next이벤트를 필터링하고 completed와 erro
 
 아마 앞 장에서 배운 Completable을 기억 할 것임 Completable은 completed와 error 이벤트만 방출하는 옵저버블의 일종인데 실제로, ignoreElements 연산자는 next이벤트를 필터링함으로써 일반적인 옵저버블 시퀀스를 completable로 변환한다.
 
-## ***\*Filtering elements you don’t need\****
+&nbsp;
+
+&nbsp;
+
+## 3. Filtering elements you don’t need
 
 ### filter
 
@@ -110,7 +126,11 @@ ignoreElements() 연산자는 next이벤트를 필터링하고 completed와 erro
   }
 ```
 
-## ***\*Implementing a basic uniqueness filter\****
+&nbsp;
+
+&nbsp;
+
+## 4. Implementing a basic uniqueness filter
 
 ### filter
 
@@ -135,7 +155,11 @@ private var imageCache = [Int]()
       }
 ```
 
-## ***\*Keep taking elements while a condition is met\****
+&nbsp;
+
+&nbsp;
+
+## 5. Keep taking elements while a condition is met
 
 ### takeWhile
 
@@ -151,9 +175,13 @@ newPhotos
 
 takeWhile 연산자 술부에서 self를 이용해서 view controller의 속성에 직접 접근했는데, 반응형 프로그래밍에서는 논란의 여지가 있음. 다음 장에서 combining operators를 이용해서 여러개의 옵저버블 시퀀스를 합치는걸 배우면 상태를 얻기위해 view controller를 이용하지 않아도 된다. 아무래도 상태가 다른 요인에 의해 변경되면 원하는 대로 동작이 안될 수도 있기 때문인가보다.
 
-## ***\*Improving the photo selector\****
+&nbsp;
 
-### ***\*PHPhotoLibrary authorization observable\****
+&nbsp;
+
+## 6. Improving the photo selector
+
+### PHPhotoLibrary authorization observable
 
 처음에 포토 라이브러리에 접근할 때 권한을 부여해야한다. 아마 처음에 권한을 허용했을 때 포토 라이브러리에 사진이 바로 나오지 않고 뒤로 갔다가 다시 들어와야 사진이 나타났을것임. 불쾌한 유저 경험임으로 개선해야한다.
 
@@ -181,7 +209,9 @@ static var authorized: Observable<Bool> {
   }
 ```
 
-### ***\*Reload the photos collection when access is granted\****
+&nbsp;
+
+### Reload the photos collection when access is granted
 
 이제 접근 권한을 얻게 되는 두 가지 시나리오가 있음
 
@@ -231,7 +261,11 @@ requestAuthorization { newStatus in
 
 스레딩은 비동기프로그래밍에서 항상 중요하다. 그리고 RxSwift를 사용하면 스레드를 쉽게 다룰 수 있다. RxSwift 코드에서 스레드를 변환하기 위해 GDC가 아닌 Schedulers를 사용해야 한다. 추후 자세히 알아보자
 
-## ***\*Display an error message if the user doesn’t grant access\****
+&nbsp;
+
+&nbsp;
+
+## 7. Display an error message if the user doesn’t grant access
 
 지금까지 유저가 포토 라이브러리 접근 권한을 부여했을 경우를 위한 구독을 했다.
 
@@ -274,13 +308,21 @@ authorized
 
 또한 위와 같이 구현해도 똑같이 동작한다. 정답은 없지만 나중에 시퀀스 로직이 변하지 않는다고 보장할 수 없기 때문에 최대한 완전하고 안전한 코드를 위해 과하게, 의도를 명확하게 구현하는것도 괜찮은 방법이다. 다시 말하지만 정답은 없다.
 
-## ***\*Trying out time-based filter operators\****
+&nbsp;
+
+&nbsp;
+
+## 8. Trying out time-based filter operators
 
 곧 time-base 연산자에 대해 더 많이 배우겠지만 그 중 일부 역시 filtering 연산자이기 때문에 지금 사용해보자.
 
 time-base 연산자는 scheduler라는걸 쓴다. scheduler는 곧 배우게 될 중요한 개념이다. 아래 예시에서 MainScheduler.instance를 사용할건데 이는 다른 기능과 함께 메인 스레드에서 코드를 실행하는 공유 스케쥴러 객체이다. 긴 설명은 뒤로하고 두 개의 간단한 시간 기반 필터링 예시를 보자.
 
-## ***\*Completing a subscription after given time interval\****
+&nbsp;
+
+&nbsp;
+
+## 9. Completing a subscription after given time interval
 
 위에서 유저가 포토 라이브러리 접근 권한을 거절한 경우 에러 메세지를 띄우고 Close버튼 탭과 함께 뒤로가는것까지 구현함
 
@@ -302,7 +344,11 @@ alert(title: "No access to Camera Roll",
 
 /// 2… take(_:scheduler:)는 소스 시퀀스로부터 주어진 시간 동안 이벤트 요소를 취한다. 일단 시간이 지나면 시퀀스가 completed(완료)된다.
 
-## ***\*Using throttle to reduce work on subscriptions with high load\****
+&nbsp;
+
+&nbsp;
+
+## 10. Using throttle to reduce work on subscriptions with high load
 
 때로는 시퀀스의 현재 요소에만 관심이 있으며 이전 값들은 쓸모가 없는 경우가 있다.
 
@@ -322,6 +368,8 @@ images
 그러나 곧 새로운 요소가 구독에 들어올걸 어떻게 알 수 있을까?
 
 위 상황같이 많은 요소들이 계속해서 들어오는 경우 마지막 것만 취해야하는 상황이 매우 빈번할것이다. 비동기 프로그래밍의 흔한 패턴이기 때문에, Rx에서 특별한 연산자를 제공한다.
+
+&nbsp;
 
 ### throttle
 
