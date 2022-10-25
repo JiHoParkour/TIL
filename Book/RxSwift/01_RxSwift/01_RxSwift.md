@@ -4,9 +4,11 @@ RxSwift를 정의하자면 관찰 가능한 시퀀스(흐름)과 함수형 스�
 
 좀 더 개발 친화적으로 정의한다면 코드가 새로운 데이터에 반응하고 순차적이고 격리된 방식으로 처리하도록 해서 비동기 프로그래밍을 간소화 시키는 툴
 
-
+&nbsp;
 
 [TOC]
+
+&nbsp;
 
 **목차**
 
@@ -42,7 +44,7 @@ RxSwift를 정의하자면 관찰 가능한 시퀀스(흐름)과 함수형 스�
 
 ​	[6. Where to go from here?](#6-Where-to-go-from-here?)
 
-
+&nbsp;
 
 ##  1. 비동기 프로그래밍?
 
@@ -82,15 +84,15 @@ var currentIndex = 0
 1. 작업 수행 순서
 2. 변경 가능한 공유된 데이터
 
-RxSwift가 어떻게 동작하고 위 문제를 풀어내는지 알아보기 전에 다음 용어를 숙지하자  
+RxSwift가 어떻게 동작하고 위 문제를 풀어내는지 알아보기 전에 다음 용어를 숙지하자
 
-
+&nbsp;
 
 ### 비동기 프로그램 용어
 
-RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프로그래밍 등과 밀접한 연관이 있는데 RxSwift는 다음과 같은 문제를 해결하고자 한다.  
+RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프로그래밍 등과 밀접한 연관이 있는데 RxSwift는 다음과 같은 문제를 해결하고자 한다.
 
-
+&nbsp;
 
 ### 상태, 특히 변경 가능한 공유된 데이터
 
@@ -100,9 +102,9 @@ RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프�
 
 메모리의 데이터, 하드디스크의 데이터, 사용자 입력에 대한 반응과 관련된 부산물들 모든것이 노트북의 상태이다.
 
-다양한 비동기 요소들간에 공유된 앱의 상태 관리를 배울 것임  
+다양한 비동기 요소들간에 공유된 앱의 상태 관리를 배울 것임
 
-
+&nbsp;
 
 ### 명령형 프로그래밍
 
@@ -112,7 +114,7 @@ RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프�
 
 특히 앱의 공유된 상태가 동작과 관련되어있을 때 메소드 호출 순서가 바뀌면 의도와 다르게 동작 할 수 있음
 
-
+&nbsp;
 
 ### 부작용
 
@@ -130,7 +132,7 @@ RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프�
 
 RxSwift는 아래 몇가지 개념을 통해 위 문제들을 해결하고자 한다.
 
-
+&nbsp;
 
 ### 선언현 프로그래밍
 
@@ -142,7 +144,7 @@ RxSwift는 두 프로그래밍의 장점을 조합한다.
 
 이 방식으로 비동기 코드로 작업할 수 있지만 불변의 데이터로 순차적이고 결정적인 방식으로 작업하는 간단한 ****for문과 같다고 가정을 해보자.
 
-
+&nbsp;
 
 ### 반응형 시스템
 
@@ -155,7 +157,7 @@ RxSwift는 두 프로그래밍의 장점을 조합한다.
 
 반응형 시스템 용어가 생소하고 어렵게 느껴지는데 일단 Rx 코드의 구성요소와 동작방법을 알아보자
 
-
+&nbsp;
 
 ## 2. RxSwift의 기원
 
@@ -175,7 +177,7 @@ RxSwift 또한 가변 상태를 다루고, 이벤트 시퀀스를 구성할 수 
 
 Observables, Operators, Schedulers 세 가지는 Rx코드의 구성요소이다.
 
-
+&nbsp;
 
 ### Observables
 
@@ -204,7 +206,7 @@ Observable이 방출하는 next, complete, error 세 개의 이벤트가 Rx의 �
 
 finite(유한), infinite(무한) 두 가지 observable의 예시를 통해 알아보자
 
-
+&nbsp;
 
 **finite observable sequence**
 
@@ -243,7 +245,7 @@ API.download(file: "<http://www>...") /// 1...
 
 ///4… onCompleted 클로저로 completed 이벤트를 구독하며 화면 이동이나 다운 받은 파일 표시 등의 작업을 한다.
 
-
+&nbsp;
 
 **Infinite observable sequences**
 
@@ -275,7 +277,7 @@ UIDevice.rx.orientation /// 1...
 
 ///2… onError와 onCompleted 두 이벤트는 방출되지 않을 거기때문에 다루지 않는다.
 
-
+&nbsp;
 
 ### Operators
 
@@ -305,7 +307,7 @@ UIDevice.rx.orientation
 
 언제나 Input data를 받아서 output data를 내놓기 때문에 서로 연결해서 복잡한 동작도 수행 할 수 있음
 
-
+&nbsp;
 
 ### Schedulers
 
@@ -319,7 +321,7 @@ RxSwift에 미리 정의된 스케쥴러는 대부분의 케이스를 99퍼센�
 
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/28bdd14bbb8cebcb00fcdc724a10d4f34c19a2b14bcdda5c7ed1f59af513b6f4/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/28bdd14bbb8cebcb00fcdc724a10d4f34c19a2b14bcdda5c7ed1f59af513b6f4/original.png)
 
-
+&nbsp;
 
 ## 3. App Architecture
 
@@ -330,6 +332,8 @@ MVC, MVVM에서 모두 사용 가능하지만 특히 MVVM 아키텍처와 궁합
 모델 데이터를 UI에 바인딩하고 표현하기 간단하다.
 
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/0625dc8cc2e93bdc9324fafea84fadaaf4729dfd39d114996486bb185bdb53e0/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/0625dc8cc2e93bdc9324fafea84fadaaf4729dfd39d114996486bb185bdb53e0/original.png)
+
+&nbsp;
 
 ## 4. RxCocoa
 
@@ -360,7 +364,7 @@ RxSwift와 문법만 다를 뿐 유사한 개념을 공유한다.
 
 iOS13 이상부터 지원한다. 관찰 가능한 시퀀스와 오퍼레이터를 이용해서 비동기 및 이벤트 기반 처리를 도와주는 툴이라는 면에서는 같다.
 
-
+&nbsp;
 
 ## 6. Where to go from here?
 
