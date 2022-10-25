@@ -4,7 +4,12 @@ RxSwift를 정의하자면 관찰 가능한 시퀀스(흐름)과 함수형 스�
 
 좀 더 개발 친화적으로 정의한다면 코드가 새로운 데이터에 반응하고 순차적이고 격리된 방식으로 처리하도록 해서 비동기 프로그래밍을 간소화 시키는 툴
 
-## 1. 비동기 프로그래밍?
+
+
+[TOC]
+
+
+##  1. 비동기 프로그래밍?
 
 앱에서 버튼에 반응하는 것, 텍스트필드를 탭 했을때 키패드가 올라오는 것, 이미지를 다운 받는 것, 음악을 듣는 것 등의 다양한 동작이 동시에 일어난다.
 
@@ -44,9 +49,13 @@ var currentIndex = 0
 
 RxSwift가 어떻게 동작하고 위 문제를 풀어내는지 알아보기 전에 다음 용어를 숙지하자
 
+
+
 ### 비동기 프로그램 용어
 
 RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프로그래밍 등과 밀접한 연관이 있는데 RxSwift는 다음과 같은 문제를 해결하고자 한다.
+
+
 
 ### 상태, 특히 변경 가능한 공유된 데이터
 
@@ -58,6 +67,8 @@ RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프�
 
 다양한 비동기 요소들간에 공유된 앱의 상태 관리를 배울 것임
 
+
+
 ### 명령형 프로그래밍
 
 컴퓨터에게 어떻게 할지 일련의 코드 시퀀스를 전달하는 것
@@ -65,6 +76,8 @@ RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프�
 문제는 복잡한 비동기식 앱을 명령형 코드로 구현하기 어렵다는것
 
 특히 앱의 공유된 상태가 동작과 관련되어있을 때 메소드 호출 순서가 바뀌면 의도와 다르게 동작 할 수 있음
+
+
 
 ### 부작용
 
@@ -82,6 +95,8 @@ RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프�
 
 RxSwift는 아래 몇가지 개념을 통해 위 문제들을 해결하고자 한다.
 
+
+
 ### 선언현 프로그래밍
 
 명령형 프로그래밍에서는 상태를 마음대로 바꾸고 함수형 프로그래밍에서는 부작용 일으키는 코드를 최소화 한다.
@@ -91,6 +106,8 @@ RxSwift는 두 프로그래밍의 장점을 조합한다.
 선언형 프로그래밍은 행동을 정의하도록 하는데 RxSwift는 이 행동들을 관련 이벤트가 발생했을때 동작하도록 하고 불변하고 격리된 데이터를 제공한다.
 
 이 방식으로 비동기 코드로 작업할 수 있지만 불변의 데이터로 순차적이고 결정적인 방식으로 작업하는 간단한 ****for문과 같다고 가정을 해보자.
+
+
 
 ### 반응형 시스템
 
@@ -102,6 +119,8 @@ RxSwift는 두 프로그래밍의 장점을 조합한다.
 - 메세지-기반(Message-driven): 요소들은 개선된 재사용성과 격리를 위해서 메세지-기반 통신을 사용하며 수명주기와 클래스 구현을 분리시킨다.
 
 반응형 시스템 용어가 생소하고 어렵게 느껴지는데 일단 Rx 코드의 구성요소와 동작방법을 알아보자
+
+
 
 ## 2. RxSwift의 기원
 
@@ -121,6 +140,8 @@ RxSwift 또한 가변 상태를 다루고, 이벤트 시퀀스를 구성할 수 
 
 Observables, Operators, Schedulers 세 가지는 Rx코드의 구성요소이다.
 
+
+
 ### Observables
 
 Observable<Element>는 Rx코드의 기초를 제공한다. 즉, Element타입의 제네릭 데이터의 변경 불가능한 스냅샷을 “전달” 할 수 있는 이벤트 시퀀스를 비동기식으로 생성하는 기능이다. 어렵다..
@@ -137,7 +158,8 @@ Observable이 따르는 ObservableType 프로토콜은 매우 간단한다. Obse
 
 시간이 흐름에 따라 방출되는 비동기 이벤트를 얘기할 때 아래와 같이 int형 데이터의 observable 스트림으로 나타낼 수 있다.
 
-![https://assets.alexandria.raywenderlich.com/books/rxs/images/f8d3cff7dafeb96562b1d9031cf41b30959aea0c036be76b0bb03070e392fed9/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/f8d3cff7dafeb96562b1d9031cf41b30959aea0c036be76b0bb03070e392fed9/original.png)
+![https://assets.alexandria.raywenderlich.com/books/rxs/images/f8d3cff7dafeb96562b1d9031cf41b30959aea0c036be76b0bb03070e392fed9/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/f8d3cff7dafeb96562b1d9031cf41b30959aea0c036be76b0bb03070e392fed9/original.png?raw=true)
+
 
 Observable이 방출하는 next, complete, error 세 개의 이벤트가 Rx의 전부라고 할 수 있다.
 
@@ -146,6 +168,8 @@ Observable이 방출하는 next, complete, error 세 개의 이벤트가 Rx의 �
 세 이벤트는 Observable과 observer의 본질에 대해 어떠한 가정도 하지 않기 때문에 궁극적인 분리(decoupleing) 방법이라고 할 수 있다. 즉, 클래스간 소통을 위해 delegate pattern을 사용하거나 closure를 사용할 필요가 없다.
 
 finite(유한), infinite(무한) 두 가지 observable의 예시를 통해 알아보자
+
+
 
 **finite observable sequence**
 
@@ -184,6 +208,8 @@ API.download(file: "<http://www>...") /// 1...
 
 ///4… onCompleted 클로저로 completed 이벤트를 구독하며 화면 이동이나 다운 받은 파일 표시 등의 작업을 한다.
 
+
+
 **Infinite observable sequences**
 
 다운로드와 다르게 무한 관찰가능한 시퀀스는 자연적이든 강제로든 종료되어야 한다. 간단한 무한 관찰가능한 시퀀스를 보자. UI 이벤트는 종종 무한히 관찰할 수 있다.
@@ -214,6 +240,8 @@ UIDevice.rx.orientation /// 1...
 
 ///2… onError와 onCompleted 두 이벤트는 방출되지 않을 거기때문에 다루지 않는다.
 
+
+
 ### Operators
 
 ObservableType과 Observable 클래스의 구현은 비동기 작업과 이벤트 조작의 개별 조각들을 추상화 하는 수많은 메소드를 포함한다. 이 메소드들은 조합될 수 있고 더 복잡한 로직으로 구현될 수 있다. 각각 매우 분리되어있고 구성가능하기 때문에 연산자라고 불린다.
@@ -242,6 +270,8 @@ UIDevice.rx.orientation
 
 언제나 Input data를 받아서 output data를 내놓기 때문에 서로 연결해서 복잡한 동작도 수행 할 수 있음
 
+
+
 ### Schedulers
 
 스케쥴러는 Rx의 dispatch queue나 operation queue같은것. 훨씬 사용하기 쉽다. 특정 작업의 실행 컨텍스트를 정의할 수 있게 해준다. 메인스레드, 백그라운드스레드 정의하는것 같다.
@@ -253,6 +283,8 @@ RxSwift에 미리 정의된 스케쥴러는 대부분의 케이스를 99퍼센�
 아래와 같이 같은 구독에서 발생한 작업을 상황에 따라 적절한 컨텍스트로 보낼 수 있다.
 
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/28bdd14bbb8cebcb00fcdc724a10d4f34c19a2b14bcdda5c7ed1f59af513b6f4/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/28bdd14bbb8cebcb00fcdc724a10d4f34c19a2b14bcdda5c7ed1f59af513b6f4/original.png)
+
+
 
 ## 3. App Architecture
 
@@ -282,7 +314,9 @@ toggleSwitch.rx.isOn
 
 위와 같이 rx.isOn속성을 이용해서 토글 스위치의 상태 변경을 구독할 수 있다.
 
-## 5. **RxSwift and Combine**
+
+
+## 5. RxSwift and Combine
 
 Combine은 애플에서 기본 제공하는 자체 프레임워크이다.
 
@@ -290,6 +324,8 @@ RxSwift와 문법만 다를 뿐 유사한 개념을 공유한다.
 
 iOS13 이상부터 지원한다. 관찰 가능한 시퀀스와 오퍼레이터를 이용해서 비동기 및 이벤트 기반 처리를 도와주는 툴이라는 면에서는 같다.
 
-## 6. **Where to go from here?**
+
+
+## 6. Where to go from here?
 
 이번 장에서는 RxSwift가 해결하려고 하는 여러 문제를 살펴보았다. 비동기 프로그래밍의 복잡성, 변경 가능한 공유된 데이터, 부수 작용 등등.. 앞으로 기본적인 observable 구현부터 시작해서 MVVM 아키텍처 앱을 구현하는는 과정에 염두에 두면 좋을 것임
