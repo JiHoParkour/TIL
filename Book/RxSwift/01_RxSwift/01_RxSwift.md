@@ -349,6 +349,7 @@ toggleSwitch.rx.isOn
 
 위와 같이 rx.isOn속성을 이용해서 토글 스위치의 상태 변경을 구독할 수 있다.
 
+&nbsp;
 
 
 ## 5. RxSwift and Combine
