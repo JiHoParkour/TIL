@@ -2,6 +2,8 @@
 
 앞서 RxSwift의 기본 개념을 배웠다. observable을 이용해서 점프업 해보자.
 
+&nbsp;
+
 이번 장에서는 observable을 생성, 구독 해볼 것임. 일부 옵저버블은 사용이 모호해보일 수도 있지만 옵저버블의 유형에 대한 중요한 스킬 얻을 수 있을것이다.
 
 &nbsp;
@@ -19,6 +21,8 @@
 ### observable, observable sequence, sequence
 
 observable, observable sequence, sequence는 Rx에서 동일한 의미이다. 때로는 stream이라고도 하는데 이건 다른 플랫폼의 Rx에서 온거고 RxSwift에서는 sequece로 통용된다.
+
+&nbsp;
 
 Observable은 단지 특별한 힘을가진 시퀀스이다. 세 가지 중 가장 중요한 한가지는 비동기다. 옵저버블은 시간이 흐르면 이벤트를 방출한다. 이벤트는 숫자나 커스텀 인스턴스 같은 값 혹은 탭 같은 제스처를 갖는다.
 
@@ -77,6 +81,8 @@ public enum Event<Element> {
 
 위와 같이 next 이벤트는 Element(요소)를 포함하고 있고 error 이벤트는 Swift.Error를 포함하고있다. 그리고 completed 이벤트는 이벤트를 멈추는 값이 없는 이벤트다.
 
+&nbsp;
+
 옵저버블이 무엇이고 무엇을 하는지 알았으니 만들어보자
 
 &nbsp;
@@ -109,6 +115,8 @@ let observable5 = Observable<Int>.range(start: 1, count: 10) /// 5...
 
 /// 5… range : 특정 범위의 옵저버블 시퀀스 생성
 
+&nbsp;
+
 Rx에서는 메소드를 operator라고 부른다. just, of, from, range 등은 모두 연산자임
 
 이제 옵저버블을 구독해보자
@@ -135,6 +143,8 @@ RxSwift의 subscribe는 addObserver와 같다.
 하지만 RxSwift는 Notification.dafault(싱글톤 인스턴스) 대신 여러 옵저버블 시퀀스를 이용한다.
 
 가장 중요한 차이는 옵저버블은 구독이 발생하기 전까지 이벤트 방출 등 어떤 동작도 하지 않는다는 점!
+
+&nbsp;
 
 앞서 observable과 sequence, 그리고 observable sequence는 같은 의미로 통용된다고 했다.
 
@@ -167,6 +177,8 @@ while let n = iterator.next() {
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/b440ce9ec15bd060eb0e31a1c52907b5f11eff19dba9457ece340c1cbd81075e/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/b440ce9ec15bd060eb0e31a1c52907b5f11eff19dba9457ece340c1cbd81075e/original.png)
 
 subscribe메소드는 Event<Int>를 받는 리턴값이 없는 탈출 클로저를 매개변수로 받는다. 그리고 Disposable을 리턴하는데 다음 장에서 알아보자.
+
+&nbsp;
 
 ```swift
 let one = 1
@@ -247,6 +259,8 @@ next이벤트 방출 없이 즉시 complreted 이벤트가 방출될것임
 
 /// 5… empty와 반대로 이벤트를 방출하지도 않고 종료도 되지 않는 옵저버블 Infinite duration을 나타내는데 이용된다는데 무한로딩을 얘기하는건가? 이것도 와닿지 않는다
 
+&nbsp;
+
 never()을 제외하고는 자동으로 completed 이벤트와 함께 종료되는 옵저버블을 살펴보았다.
 
 그리고 옵저버블을 만들고 구독하는데 집중할 수 있었다. 하지만 옵저버블을 구독하는것의 중요한 점이 가려져있는데 바로 이번 장 중간에 등장했던 Disposable과 관련이 있다.
@@ -260,6 +274,8 @@ never()을 제외하고는 자동으로 completed 이벤트와 함께 종료되�
 옵저버블은 구독전엔 아무 동작도 하지 않는다. 구독은 옵저버블이 completed나 error 이벤트와 함께 종료될 때까지 이벤트를 방출하도록 한다.
 
 그런데 구독을 취소함으로써 수동으로 종료할 수도 있다.
+
+&nbsp;
 
 앞서 subscribe는 disposable을 리턴한다고 했다. 이 disposable의 dispose()를 호출하면 구독을 취소할 수 있다.
 
@@ -276,6 +292,8 @@ subscription.dispose()
 각각의 구독을 개별관리하는건 어렵기때문에 RxSwift에서 disposable을 담을 DisposeBag을 제공한다.
 
 disposeBag이 메모리에서 해제되기 직전에 담겨있는 disposable들의 dispose()메소드를 호출하게됨
+
+&nbsp;
 
 ```swift
 let disposeBag = DisposeBag() /// 1...
@@ -294,8 +312,11 @@ Observable.of("A", "B", "C") /// 2...
 ///3… observable 구독 및 이벤트 핸들링
 
 ///4… subscribe에서 리턴된 disposable을 dispose bag에 담기
+&nbsp;
 
 위 패턴은 가장 자주 쓰게 될 패턴임
+
+&nbsp;
 
 왜 disposable을 신경써야 할까?
 
@@ -316,6 +337,8 @@ create 연산자는 subscribe를 매개변수로 받는다. 그리고 observable
 create연산자의 매개변수 subscribe는 Disposable 리턴하고 AnyObserver를 받는 탈출 클로저이며 Disposable을 리턴한다.
 
 AnyObserver는 옵저버블 시퀀스에 어떤 값이든 더할 수 있는 제네릭 타입이며 구독자들에게 방출될것임
+
+&nbsp;
 
 create연산자를 이용해보자.
 
@@ -401,6 +424,8 @@ for _ in 0...3 { /// 5...
 
 ///4… flip값에 따라 다른 옵저버블 반환
 
+&nbsp;
+
 외부에서는 어떤 옵저버블이 반환되는지 알 수 없다.
 
 구독마다 옵저버블을 여러개 만들 필요 없이 특정 조건에 따라 알맞는 옵저버블을 생성할 수 있겠다.
@@ -427,9 +452,15 @@ Single, Maybe, Completable 세 가지의 trait이 있다.
 
 Single은 success(value)이벤트 혹은 error(error) 이벤트를 방출한다. success(value)이벤트는 next 이벤트와 completed 이벤트의 결합이다. Single은 다운로드 같이 성공해서 값을 산출하거나 실패하는 일회성 처리에 유용하다.
 
+&nbsp;
+
 Completable은 completed 이벤트 혹은 error(error)이벤트를 방출한다. 값은 방출하지 않는다. 파일 쓰기같은 성공/실패 처리에 유용하다.
 
+&nbsp;
+
 마지막으로 Maybe는 Single과 Completable의 혼합이다. success(value), completed 이벤트 혹은 error(error) 이벤트를 방출한다. 성공/실패 작업 뿐 아니라 성공 시 값을 방출 할 수도 있는 작업에 유용하다.
+
+&nbsp;
 
 다음 장에서 더 자세히 다룰 기회가 있을것임
 
@@ -498,6 +529,8 @@ loadText(from: "Copyright")
 do 연산자는 부수 효과를 삽입 할 수 있도록 해주는데 방출된 이벤트에는 영향을 주지 않으면서 어떤 작업을 할 수 있음
 
 do는 다음 연산자에게 값을 그대로 전달함. subscribe과는 다르게 onSubscribe 핸들러를 추가로 포함하고 있고 subscribe처럼 원하는 이벤트에 대한 처리만 할 수 있다.
+
+&nbsp;
 
 예시를 통해 알아보자
 
