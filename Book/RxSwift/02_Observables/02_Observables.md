@@ -1,18 +1,74 @@
-# 2. Observables
+# 2장 Observables
 
 앞서 RxSwift의 기본 개념을 배웠다. observable을 이용해서 점프업 해보자.
 
 이번 장에서는 observable을 생성, 구독 해볼 것임. 일부 옵저버블은 사용이 모호해보일 수도 있지만 옵저버블의 유형에 대한 중요한 스킬 얻을 수 있을것이다.
 
+&nbsp;
+
+[TOC]
+
+&nbsp;
+
+**목차**
+
+[2장 Observables](#2장-Observables)
+
+​	[1. 옵저버블?](#1.-옵저버블?)
+
+​		[observable, observable sequence, sequence](#observable,-observable-sequence,-sequence)
+
+​		[marble diagram](#marble-diagram)
+
+​	[2. 옵저버블의 생애주기(LifeCycle of an observable)](#2.-옵저버블의-생애주기(LifeCycle-of-an-observable))
+
+​		[next, completed, error](#next,-completed,-error)
+
+​	[3. 옵저버블 만들기(Creating observables)](#3.-옵저버블-만들기(Creating-observables))
+
+​		[just, of, from, range](#just,-of,-from,-range)
+
+​	[4. 옵저버블 구독하기(Subscribing to observables)](#4.-옵저버블-구독하기(Subscribing-to-observables))
+
+​		[subscribe](#subscribe)
+
+​		[empty, never](#empty,-never)
+
+​	[5. 폐기 및 종료(Disposing and terminating)](#5.-폐기-및-종료(Disposing-and-terminating))
+
+​		[create](#create)
+
+​	[6. 옵저버블 팩토리 만들기(Creating observable factories)](#6.-옵저버블-팩토리-만들기(Creating-observable-factories))
+
+​		[deffered](#deffered)
+
+​	[7. 특성 사용하기(Using Traits)](#7.-특성-사용하기(Using-Traits))
+
+​		[Single, Maybe, Completable](#Single,-Maybe,-Completable)
+
+​	[8. 부수 효과 실행하기(Perform side effects)](#8.-부수-효과-실행하기(Perform-side-effects))
+
+​		[do](#do)
+
+​	[9. 디버그 정보 출력하기(Print debug info)](#9.-디버그-정보-출력하기(Print-debug-info))
+
+​		[debug](#debug)
+
+&nbsp;
+
 ## 1. 옵저버블?
 
 옵저버블은 rx의 심장이다. 어떻게 만들고 사용하는지 알아볼것임
+
+&nbsp;
 
 ### observable, observable sequence, sequence
 
 observable, observable sequence, sequence는 Rx에서 동일한 의미이다. 때로는 stream이라고도 하는데 이건 다른 플랫폼의 Rx에서 온거고 RxSwift에서는 sequece로 통용된다.
 
 Observable은 단지 특별한 힘을가진 시퀀스이다. 세 가지 중 가장 중요한 한가지는 비동기다. 옵저버블은 시간이 흐르면 이벤트를 방출한다. 이벤트는 숫자나 커스텀 인스턴스 같은 값 혹은 탭 같은 제스처를 갖는다.
+
+&nbsp;
 
 ### marble diagram
 
@@ -23,6 +79,10 @@ Observable은 단지 특별한 힘을가진 시퀀스이다. 세 가지 중 가�
 얼마나 오래? 라고 생각했다면 옵저버블의 생애주기를 알아볼 차례다.
 
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/c1161239a67d91b694c2ef4cf9f746b75a8ac5f29e8c540207b89f5792944988/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/c1161239a67d91b694c2ef4cf9f746b75a8ac5f29e8c540207b89f5792944988/original.png)
+
+&nbsp;
+
+&nbsp;
 
 ## 2. 옵저버블의 생애주기(LifeCycle of an observable)
 
@@ -41,6 +101,8 @@ Observable은 단지 특별한 힘을가진 시퀀스이다. 세 가지 중 가�
 - 옵저버블은 요소를 포함하고있는 next이벤트를 방출한다.
 - 옵저버블은 error나 complete 종료 이벤트가 발생하기 전까지 next이벤트를 방출한다.
 - 옵저버블은 종료된 이후에 이벤트를 방출 할 수 없다.
+
+&nbsp;
 
 ### next, completed, error
 
@@ -62,6 +124,10 @@ public enum Event<Element> {
 위와 같이 next 이벤트는 Element(요소)를 포함하고 있고 error 이벤트는 Swift.Error를 포함하고있다. 그리고 completed 이벤트는 이벤트를 멈추는 값이 없는 이벤트다.
 
 옵저버블이 무엇이고 무엇을 하는지 알았으니 만들어보자
+
+&nbsp;
+
+&nbsp;
 
 ## 3. 옵저버블 만들기(Creating observables)
 
@@ -92,6 +158,10 @@ let observable5 = Observable<Int>.range(start: 1, count: 10) /// 5...
 Rx에서는 메소드를 operator라고 부른다. just, of, from, range 등은 모두 연산자임
 
 이제 옵저버블을 구독해보자
+
+&nbsp;
+
+&nbsp;
 
 ## 4. 옵저버블 구독하기(Subscribing to observables)
 
@@ -133,6 +203,8 @@ while let n = iterator.next() {
  2
  */
 ```
+
+&nbsp;
 
 ### subscribe
 
@@ -186,6 +258,8 @@ onNext: { element in
 
 ///3… 옵셔널 바인딩 없이 각 이벤트의 값을 다루는 방법. 원하는 이벤트만 처리 할 수 있다.
 
+&nbsp;
+
 ### empty, never
 
 ```swift
@@ -222,6 +296,10 @@ next이벤트 방출 없이 즉시 complreted 이벤트가 방출될것임
 never()을 제외하고는 자동으로 completed 이벤트와 함께 종료되는 옵저버블을 살펴보았다.
 
 그리고 옵저버블을 만들고 구독하는데 집중할 수 있었다. 하지만 옵저버블을 구독하는것의 중요한 점이 가려져있는데 바로 이번 장 중간에 등장했던 Disposable과 관련이 있다.
+
+&nbsp;
+
+&nbsp;
 
 ## 5. 폐기 및 종료(Disposing and terminating)
 
@@ -269,6 +347,8 @@ Observable.of("A", "B", "C") /// 2...
 
 dispoable을 dispose bag에 담지 않거나 직접 dispose() 호출을 해서 구독 취소를 하지 않으면 메모리누수가 발생할 수도 있음! 구독이 메모리에서 해제되지 않는가보다. 컴파일러가 경고할것임
 
+&nbsp;
+
 ### create
 
 create 연산자를 이용하면 옵저버블이 방출할 이벤트를 특정할 수 있다.
@@ -314,9 +394,15 @@ Observable<String>.create { observer in
 
 Disposable을 리턴하는게 이상해보여도 subscribe 연산자가 subscription을 나타내는 disposable을 반환해야한다는걸 기억해보자. subscribe가 사용하나보다.
 
+&nbsp;
+
+&nbsp;
+
 ## 6. 옵저버블 팩토리 만들기(Creating observable factories)
 
 구독을 기다리는 옵저버블을 만드는 것 보단, 각 구독자에게 새로운 옵저버블을 뱉는 옵저버블 팩토리를 만들 수 있다.
+
+&nbsp;
 
 ### deffered
 
@@ -365,7 +451,11 @@ for _ in 0...3 { /// 5...
 
 구독마다 옵저버블을 여러개 만들 필요 없이 특정 조건에 따라 알맞는 옵저버블을 생성할 수 있겠다.
 
-## 7. 특성 사용하기(***\*Using Traits)\****
+&nbsp;
+
+&nbsp;
+
+## 7. 특성 사용하기(Using Traits)
 
 Traits은 일반 Observable 보다 적은 행동을 갖는 Observable이다. 꼭 써야할 필요는 없다.
 
@@ -374,6 +464,8 @@ Traits은 일반 Observable 보다 적은 행동을 갖는 Observable이다. 꼭
 왜 사용하는걸까?
 
 더 명확한 의도를 전달하기 위해서! trait을 사용하면 코드가 더 직관적이다. Observable에게 기대하는 행동이 적어서 배제할 수 있기 때문인가보다.
+
+&nbsp;
 
 ### Single, Maybe, Completable
 
@@ -437,9 +529,15 @@ loadText(from: "Copyright")
 
 ///2… 방출된 이벤트가 success 인지 error인지에 따라 값을 산출해서 처리
 
+&nbsp;
+
+&nbsp;
+
 ## 8. 부수 효과 실행하기(Perform side effects)
 
 옵저버블의 이벤트 방출에 영향을 주지 않으면서 부수 작업을 하고 싶을 때 유용한 연산자가 있다.
+
+&nbsp;
 
 ### do
 
@@ -476,9 +574,15 @@ let observable = Observable<Int>.of(1)
 
 ///1… subscribe이전에 do를 삽입해서 구독이 됐을 때나 값이 이벤트가 방출됐을 때 이벤트에 영향을 주지 않고 부수 작업을 할 수 있다.
 
+&nbsp;
+
+&nbsp;
+
 ## 9. 디버그 정보 출력하기(Print debug info)
 
 do를 이용해서 부수 작업을 하는게 debug를 하는 방법 중 하나 일 수 있지만 목적에 맞는 더 좋은 방법이 있다.
+
+&nbsp;
 
 ### debug
 
