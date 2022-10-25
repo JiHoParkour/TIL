@@ -4,26 +4,43 @@ RxSwift를 정의하자면 관찰 가능한 시퀀스(흐름)과 함수형 스�
 
 좀 더 개발 친화적으로 정의한다면 코드가 새로운 데이터에 반응하고 순차적이고 격리된 방식으로 처리하도록 해서 비동기 프로그래밍을 간소화 시키는 툴
 
+
+
 [TOC]
 
 ### 목차
 
-[1장 RxSwift](#1장 -RxSwift)
-	[1. 비동기 프로그래밍?](#1.-비동기-프로그래밍?)
-		[비동기 프로그램 용어](#비동기-프로그램-용어)
-		[상태, 특히 변경 가능한 공유된 데이터](#상태,-특히 변경-가능한-공유된 데이터)
-		[명령형 프로그래밍](#명령형-프로그래밍)
-		[부작용](#부작용)
-		[선언형 프로그래밍](#선언형-프로그래밍)
-		[반응형 시스템](#반응형-시스템)
-	[2. RxSwift의 기원](#2.-RxSwift의-기원)
-		[Observables](#Observables)
-		[Operators](#Operators)
-		[Schedulers](#Schedulers)
-	[3. App Architecture](#3.-App-Architecture)
-	[4. RxCocoa](#4.-RxCocoa)
-	[5. RxSwift and Combine](#5-RxSwift-and-Combine)
-	[6. Where to go from here?](#6-Where-to-go-from-here?)
+[1장 RxSwift](#1장-RxSwift)
+
+​	[1. 비동기 프로그래밍?](#1.-비동기-프로그래밍?)
+
+​		[비동기 프로그램 용어](#비동기-프로그램-용어)
+
+​		[상태, 특히 변경 가능한 공유된 데이터](#상태,-특히-변경-가능한-공유된 데이터)
+
+​		[명령형 프로그래밍](#명령형-프로그래밍)
+
+​		[부작용](#부작용)
+
+​		[선언형 프로그래밍](#선언형-프로그래밍)
+
+​		[반응형 시스템](#반응형-시스템)
+
+​	[2. RxSwift의 기원](#2.-RxSwift의-기원)
+
+​		[Observables](#Observables)
+
+​		[Operators](#Operators)
+
+​		[Schedulers](#Schedulers)
+
+​	[3. App Architecture](#3.-App-Architecture)
+
+​	[4. RxCocoa](#4.-RxCocoa)
+
+​	[5. RxSwift and Combine](#5-RxSwift-and-Combine)
+
+​	[6. Where to go from here?](#6-Where-to-go-from-here?)
 
 
 
