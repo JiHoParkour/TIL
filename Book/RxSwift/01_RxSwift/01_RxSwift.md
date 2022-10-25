@@ -159,6 +159,8 @@ RxSwift는 두 프로그래밍의 장점을 조합한다.
 
 &nbsp;
 
+&nbsp;
+
 ## 2. RxSwift의 기원
 
 반응형 프로그래밍은 새로운 개념이 아니라 꽤 오래전부터 있던 개념이다.
@@ -323,6 +325,8 @@ RxSwift에 미리 정의된 스케쥴러는 대부분의 케이스를 99퍼센�
 
 &nbsp;
 
+&nbsp;
+
 ## 3. App Architecture
 
 RxSwift는 앱 아키텍처 변경을 강제하진 않는다. 주로 이벤트, 비동기 데이터 시퀀스 처리와 요소 간 범용 소통 계약을 다룬다.
@@ -332,6 +336,8 @@ MVC, MVVM에서 모두 사용 가능하지만 특히 MVVM 아키텍처와 궁합
 모델 데이터를 UI에 바인딩하고 표현하기 간단하다.
 
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/0625dc8cc2e93bdc9324fafea84fadaaf4729dfd39d114996486bb185bdb53e0/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/0625dc8cc2e93bdc9324fafea84fadaaf4729dfd39d114996486bb185bdb53e0/original.png)
+
+&nbsp;
 
 &nbsp;
 
@@ -355,6 +361,8 @@ toggleSwitch.rx.isOn
 
 &nbsp;
 
+&nbsp;
+
 
 ## 5. RxSwift and Combine
 
@@ -363,6 +371,8 @@ Combine은 애플에서 기본 제공하는 자체 프레임워크이다.
 RxSwift와 문법만 다를 뿐 유사한 개념을 공유한다.
 
 iOS13 이상부터 지원한다. 관찰 가능한 시퀀스와 오퍼레이터를 이용해서 비동기 및 이벤트 기반 처리를 도와주는 툴이라는 면에서는 같다.
+
+&nbsp;
 
 &nbsp;
 
