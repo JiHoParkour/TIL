@@ -82,19 +82,40 @@ RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프�
 
 특히 앱의 공유된 상태가 동작과 관련되어있을 때 메소드 호출 순서가 바뀌면 의도와 다르게 동작 할 수 있음
 
+```swift
+override func viewDidAppear(_ animated: Bool) {
+  super.viewDidAppear(animated)
+
+  setupUI()
+  connectUIControls()
+  createDataSource()
+  listenForChanges()
+}
+```
+
+이 메소드들이 무엇을 하는지 알 수 없다. view controller 자체의 프로퍼티를 업데이트 하는지? 더 불안하게도, 올바른 순서로 호출 되는지? 아마 누군가 실수로 이 메소드들의 호출 순서를 뒤바꾸고 변경사항을 소스컨트롤에 커밋 했을 수 있다. 이제 앱은 뒤바뀐 호출 순서 때문에 다르게 동작할것임
+
 &nbsp;
 
 ### 부작용
 
-변경 가능한 공유데이터와 명령형 프로그래밍 두 가지로부터 발생하는 이슈라고 할 수 있다.
+위 변경 가능한 상태와 명령형 프로그래밍에 대해 알게 되었으므로 이 두가지의 대부분 문제를 부작용이라고 할 수 있을 것임
 
-부작용은 코드가 의도했던 범위 밖의 변화를 말하는데 디스크에 저장된 데이터를 변경하거나 UI를 업데이트할 때 발생한다.
+&nbsp;
+
+부작용은 함수등의 현재 코드 범위 바깥의 상태에 대한 어떤 변화를 의미한다. 예를 들면 위 코드에서 connectUIControls() 메소드는 어떤 UI요소에 이벤트 핸들러를 달것이고 이건 view의 상태를 바꾸며 부작용을 일으킨다. 다시 말해 앱은 한 가지 방법으로 동작하다가 connectUIControls()이 실행된 후 다르게 동작할 것임. connectUIControls() 실행 전 까진 예측 한대로 동작하다가 실행 이후 외부의 상태를 변경하며 부작용을 발생 시킨다는 뜻인듯?
+
+&nbsp;
+
+디스크에 저장된 데이터를 변경하거나 화면위 라벨의 텍스트를 업데이트 할 때 부작용이 발생한다.
+
+&nbsp;
 
 용어의 뉘앙스 때문에 그렇지 나쁜건 아닌것 같다 왜냐하면 결국 부작용을 발생시키는 것이 모든 프로그램의 궁극적인 목표기때문에
 
-잠시 동작하고 아무것도 못하는 앱은 쓸모가 없다. 프로그램의 동작이 끝나고 어떤 변화를 만들어내야 함.
+프로그램의 동작이 끝나고 세상에 어떤 변화를 만들어내야 할 것 아닌가? 잠시 동작하고 아무것도 못하는 앱은 쓸모가 없다. 
 
-&nbsp;
+![https://assets.alexandria.raywenderlich.com/books/rxs/images/a807e16ddce3a43a26ac84b39a505926a0926e7cbcb5090298d3b080d3d8ae3d/original.png](./assets/original-20221026181409551.png)
 
 중요한 것은 통제된 방식으로 부작용을 생성하는것임
 
@@ -102,7 +123,7 @@ RxSwift에서 등장하는 몇몇 단어는 비동기, 반응형, 함수형 프�
 
 어떤 코드가 부작용을 일으키는지, 단순히 데이터를 처리하고 출력하는지 결정할 수 있어야 한다.
 
-RxSwift는 아래 몇가지 개념을 통해 위 문제들을 해결하고자 한다.
+RxSwift는 아래 몇 가지 개념을 통해 위 문제들을 해결하고자 한다.
 
 &nbsp;
 
@@ -114,7 +135,7 @@ RxSwift는 두 프로그래밍의 장점을 조합한다.
 
 &nbsp;
 
-선언형 프로그래밍은 행동을 정의하도록 하는데 RxSwift는 이 행동들을 관련 이벤트가 발생했을때 동작하도록 하고 불변하고 격리된 데이터를 제공한다.
+선언형 프로그래밍은 행동을 정의하도록 하는데 RxSwift는 이 행동들을 관련 이벤트가 발생했을때 동작하도록 하고 불변하고 격리된 데이터를 제공(상태를 마음대로 바꾸는게 아닌 현재 상태를 보고하는 개념)한다.
 
 &nbsp;
 
@@ -191,7 +212,7 @@ Observable이 따르는 ObservableType 프로토콜은 매우 간단한다. Obse
 
 시간이 흐름에 따라 방출되는 비동기 이벤트를 얘기할 때 아래와 같이 int형 데이터의 observable 스트림으로 나타낼 수 있다.
 
-![https://assets.alexandria.raywenderlich.com/books/rxs/images/f8d3cff7dafeb96562b1d9031cf41b30959aea0c036be76b0bb03070e392fed9/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/f8d3cff7dafeb96562b1d9031cf41b30959aea0c036be76b0bb03070e392fed9/original.png?raw=true)
+![https://assets.alexandria.raywenderlich.com/books/rxs/images/f8d3cff7dafeb96562b1d9031cf41b30959aea0c036be76b0bb03070e392fed9/original.png](./assets/original-20221026181427177.png)
 
 
 Observable이 방출하는 next, complete, error 세 개의 이벤트가 Rx의 전부라고 할 수 있다.
@@ -331,7 +352,7 @@ RxSwift에 미리 정의된 스케쥴러는 대부분의 케이스를 99퍼센�
 
 아래와 같이 같은 구독에서 발생한 작업을 상황에 따라 적절한 컨텍스트로 보낼 수 있다.
 
-![https://assets.alexandria.raywenderlich.com/books/rxs/images/28bdd14bbb8cebcb00fcdc724a10d4f34c19a2b14bcdda5c7ed1f59af513b6f4/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/28bdd14bbb8cebcb00fcdc724a10d4f34c19a2b14bcdda5c7ed1f59af513b6f4/original.png)
+![https://assets.alexandria.raywenderlich.com/books/rxs/images/28bdd14bbb8cebcb00fcdc724a10d4f34c19a2b14bcdda5c7ed1f59af513b6f4/original.png](./assets/original-20221026181435604.png)
 
 &nbsp;
 
@@ -345,7 +366,7 @@ MVC, MVVM에서 모두 사용 가능하지만 특히 MVVM 아키텍처와 궁합
 
 모델 데이터를 UI에 바인딩하고 표현하기 간단하다.
 
-![https://assets.alexandria.raywenderlich.com/books/rxs/images/0625dc8cc2e93bdc9324fafea84fadaaf4729dfd39d114996486bb185bdb53e0/original.png](https://assets.alexandria.raywenderlich.com/books/rxs/images/0625dc8cc2e93bdc9324fafea84fadaaf4729dfd39d114996486bb185bdb53e0/original.png)
+![https://assets.alexandria.raywenderlich.com/books/rxs/images/0625dc8cc2e93bdc9324fafea84fadaaf4729dfd39d114996486bb185bdb53e0/original.png](./assets/original-20221026181440631.png)
 
 &nbsp;
 
