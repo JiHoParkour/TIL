@@ -465,9 +465,23 @@ onNext 클로저를 보자. accept()로 lastModified relay에 최신 날짜를 �
 
 ![https://assets.alexandria.raywenderlich.com/books/rxs/images/031f85b4237dac7318bf060187db7406bef32cf3ae065fef0f56ab8f05957db3/original.png](./assets/original-20221027182408124.png)
 
-
-
 지금까지 map과 flatMap의 사용 용례에 대해 알아봤음. thread 관리에 대한 것은 잠시 덮어뒀지만 GitFeed라는 앱도 만들어봄
+
+&nbsp;
+
+아래 챌린지 섹션에서 쓰레드 전략을 추가해서 백그라운드에서 변환을 하고 UI업데이트를 위해 메인 쓰레드로 전환 할 수 있다. 이렇게 하면 앱이 죽지않으며 반응형을 유지 할 수 있다.
+
+&nbsp;
+
+나중엔 더 많은 map과 flatMap을 추가해서 프로젝트를 쉽게 확장하는 방법을 알게 될 것임
+
+&nbsp;
+
+챌린지 이후에는, 다음 장에서 복잡한 구독을 훌륭하게 단순화 하는 combining 연산자에 대해 알아 볼 것임
+
+
+
+### Challenge
 
 
 
