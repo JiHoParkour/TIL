@@ -354,7 +354,7 @@ if let eventsData = try? Data(contentsOf: eventsFileURL),
 
 &nbsp;
 
-## 4. Add a last-modified header to the request
+## 5. Add a last-modified header to the request
 
 flatMap과 flat은 매우 중요하므로 다시 다뤄보자. 가져온적이 없는 이벤트만 가져오도록 최적화 할 것임. 레포지토리에 새로운 활동이 하나도 없으면 서버로부터 빈 응답을 받아서 트래픽과 처리를 절약할 것임
 
@@ -481,19 +481,47 @@ onNext 클로저를 보자. accept()로 lastModified relay에 최신 날짜를 �
 
 
 
-### Challenge
+## 6. Challenge
 
+인기있는 레포지토리 가져오기 & 피드 꾸미기
 
+챌린지에서 map/flatMap을 이용해서 정해진 레포의 마지막 활동을 불러오는 대신 인기있는 스위프트 레포지토리의 활동을 보여줄 것임
 
+기존에 하드코딩 되어있던 레포지토리를 수정하자
 
+```swift
+private let repo = "ReactiveX/RxSwift"
 
+let response = Observable.from([repo])
 
+/// 1...
+let response = Observable.from(["https://api.github.com/search/repositories?q=language:swift&per_page=5"])
+      .map { urlString -> URL in
+        return URL(string: urlString)!
+      }
+      .map { url -> URLRequest in
+        return URLRequest(url: url)
+      }
+      .flatMap { request -> Observable<Any> in
+        return URLSession.shared.rx.json(request: request) /// 2...
+      }
+      .flatMap { response -> Observable<String> in 
+        guard let response = response as? [String:Any],
+              let items = response["items"] as? [[String:Any]] else { /// 3...
+          return Observable.empty() /// 4...
+        }
+        return Observable.from(items.map { $0["full_name"] as! String })
+      }
+			/// 원래 있던 코드 연결하기
+```
 
+/// 1... 하드코딩 ReactiveX/RxSwift대신 탑 5 Swift 레포지토리를 불러오는 API Endpoint를 이용
 
+/// 2... response의 header값이 필요 없기 때문에 URLSession.shared.rx.json(request: )를 이용해서 변환된 JSON 을 바로 얻을 수 있음
 
+/// 3... JSON response에서 "items" 키를 이용해 각각의 [String:Any] 타입의 레포지토리를 얻을 수 있다.
 
-
-
+/// 4... 실패할 경우 Observable.empty() 를 리턴, 문제가 없는 경우 각 레포지토리의 "full_name"키를 이용해 레포지토리의 이름을  Observable<String>로 리턴
 
 
 
