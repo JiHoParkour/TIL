@@ -4,6 +4,10 @@
 
 &nbsp;
 
+[TOC]
+
+&nbsp;
+
 ## 1. Buffering operators
 
 첫번째 시간 기반 연산자 그룹은 버퍼링을 다룬다. 버퍼링 연산자는 지난 요소들을 새로운 구독에 재방출 할 뿐아니라 저장하고 갖고있다가 폭발적으로?(한번에?) 전달한다. 어떻게, 언제 과거와 새로운 요소들이 전달될지 컨트롤 할 수 있게 해준다.
@@ -206,19 +210,157 @@ completed
 
 ## Time-shifting operators
 
+때때로, 시간을 여행할 필요가 있다. RxSwift가 과거 관계의 실수를 고치는데 도움을 줄 수 없는 반면, Time-shifting 연산자는 자가 복제가 가능할 때 까지 잠시동안 멈추게 할 수 있는 능력이 있다.
+
+&nbsp;
+
+시간과 관련된 두 개의 연산자를 들여다보자.
+
+&nbsp;
+
+###Delayed subscriptions
+
+```swift
+let elementsPerSecond = 1
+let delay: RxTimeInterval = .milliseconds(1500)
+
+let sourceObservable = PublishSubject<Int>()
 
 
+var current = 1
+let timer = Timer.scheduledTimer(withTimeInterval: 1.0 / Double(elementsPerSecond), repeats: true, block: { timer in
+    sourceObservable.onNext(current)
+    current = current + 1
+})
+
+_ = sourceObservable
+  .delaySubscription(delay, scheduler: MainScheduler.instance)
+  .subscribe({ value in
+      print(value)
+  })
+/* print
+next(2)
+next(3)
+next(4)
+next(5)
+...
+*/
+```
+
+delayedSubscription(_:scheduler:)는 이름이 의미하는대로, 구독자가 구독으로부터 요소를 받기 시작하는 시간을 지연한다. 위 예시코드에서 1.5초 이후에 요소 2부터 받는 것을 확인할 수 있다.
+
+&nbsp;
+
+###cold observable & hot observable
+
+주의: Rx에서 어떤 옵저버블은 "cold"라고 불리는 반면 어떤 옵저버블은 "hot"이라고 불린다. Cold 옵저버블은 구독을 한 뒤에 요소들을 방출하기 시작한다. Hot 옵접버블은 어떤 시점에 보게 되는 영구적인 소스같은 것임(알림을 생각해보자). 구독을 지연시킬 때, 옵저버블이 cold면 차이를 만들 수 없을 것임. hot 옵저버블이면 아마 요소들을 스킵할 것임.
+
+&nbsp;
+
+Hot과 Cold 옵저버블은 머릿속을 어지럽히는 까다로운 주제임. cold 옵저버블은 오직 구독이 됐을 때 이벤트를 생성한다는 것을 기억하자. 그러나 hot 옵저버블은 구독이 되는것과는 상관없이 이벤트를 생성한다.
+
+&nbsp;
+
+###Delayed elements
+
+다른 종류의 지연은 전체 시퀀스가 시간 이동을 하도록 한다. 구독을 늦추는 대신, 연산자는 소스 옵저버블을 즉시 구독하지만 특정 시간 동안 모든 이벤트를 지연시킨다. 최종 결과는 구체적인 시간 이동임.
+
+```swift
+let elementsPerSecond = 1
+let delay: RxTimeInterval = .milliseconds(1500)
+
+let sourceObservable = PublishSubject<Int>()
 
 
+var current = 1
+let timer = Timer.scheduledTimer(withTimeInterval: 1.0 / Double(elementsPerSecond), repeats: true, block: { timer in
+    sourceObservable.onNext(current)
+    current = current + 1
+})
 
+_ = sourceObservable
+  .delay(delay, scheduler: MainScheduler.instance)
+  .subscribe({ value in
+      print(value)
+  })
+/* print
+next(1)
+next(2)
+next(3)
+next(4)
+next(5)
+...
+*/
+```
 
+코드는 비슷하다. delaySubscription을 delay로 대체했다. 하지만 이전에는 구독을 지연했기 때문에 next(1)을 받지 못했다. 반면 delay연산자는 요소들을 시간이동 시키기 때문에 어떤것도 놓치지 않았다. 다시말하면 구독이 즉시 발생했다. 단순히 지연된 아이템들을 확인 할 수 있다.
 
+&nbsp;
 
+&nbsp;
 
+##Time operators
 
+모든 앱에서 일반적으로 필요한건 타이머다. iOS와 macOS는 몇개의 타이밍 솔루션이 있다. 역사적으로 Timer는 일을 해냈지만 혼란스러운 소유권 모델을 갖고 있어서 제대로 하기가 까다로웠다. 최근에는, 디스패치 프레임워크가 디스패치 소스를 사용해서 타이머를 제공했다. 그건 비록 래핑을 하지 않으면 여전히 API가 복잡했지만 그래도 Timer보단 나은 솔루션이다.
 
+&nbsp;
 
+RxSwift는 일회용 타이머와 반복 타이머 모두에 간단하고 효과적인 솔루션을 제공한다. 그건 시퀀스와 완벽하게 통합되고 다른 시퀀스에 취소와 결합성 모두를 완벽하게 제공한다.
 
+&nbsp;
 
+###Intervals
 
+위 예시들에서 interval timer를 만들기 위해서  Timer를 몇 번 사용했다. timer를 RxSwift의 Observable.interval(_:scheduler:) 함수로 대체할 수 있다. 이건 무한한 Int값 옵저버블 시퀀스를 생성하고 지정된 스케쥴러에서 선택한 간격으로 전송한다.
 
+```swift
+let sourceObservable = Observable<Int>
+  .interval(.milliseconds(Int(1000.0 / Double(elementsPerSecond))), scheduler: MainScheduler.instance)
+  .replay(replayedElements)
+```
+
+위 replay 예시에서 타이머를 이용하는 대신 interval 함수를 이용해서 소스 옵저버블을 생성 할 수 있다.
+
+&nbsp;
+
+RxSwift에서 interval timer를 만드는건 놀랍도록 쉽다. 뿐만아니라 취소 또한 쉽다. 왜냐면 interval(_:scheduler:)가 옵저버블 시퀀스를 생성하기 때문에 구독을 취소하고 타이머를 멈추기 위해서 간단하게 반환된 disposable을 dispose()할 수 있다.
+
+&nbsp;
+
+구독자가 시퀀스를 관찰하기 시작하고 특정 기간에 첫 번째 값이 방출된다는 것은 주목할 만하다. 또한 타이머도 이 시점 전에는 시작하지 않을 것임. 구독은 타이머를 시작하는 방아쇠임. 구독이 발생 한 후 이벤트가 방출되기 때문에 cold 옵저버블!
+
+&nbsp;
+
+주의: 위 예시에서 알 수 있듯이 interval은 0부터 시작하는 정수값을 방출한다. 만약 다른 값이 필요하면 map()을 이용하면된다. 실제 경우에는 타이머에서 방출된 값은 무시되지만 유용한 인덱스이다.
+
+&nbsp;
+### One-shot or repeating timers
+
+더 강력한 타이머 옵저버블을 원한다면 Observable.timer(_dueTime:period:scheduler:) 연산자가 있다. interval과 비슷하지만 몇 가지 특정이 있다.
+
+* 구독 시점과 첫 번째 방출된 값 사이의 경과 시간으로 "마감 기한"을 지정할 수 있다. 즉, 구독하고 몇 초 후에 값을 받을 지.
+* 반복 주기는 선택이다. 만약 특정하지 않으면 타이머 옵저버블은 한 번 방출하고 완료될 것임
+
+얼마나 유용한지 코드로 보자.
+
+```swift
+_ = Observable<Int>
+  .timer(.seconds(3), scheduler: MainScheduler.instance)
+  .flatMap { _ in
+    sourceObservable.delay(delay, scheduler: MainScheduler.instance)
+  }
+  .subscribe(delayedTimeline)
+
+```
+
+타이머를 촉발하는 타이머는 처음이다. 몇 가지 이점이 있는데 다음과 같다.
+
+* 전체 과정의 가독성이 좋다(Rx스럽다).
+* 구독이 disposable을 반환하기 때문에, 첫 번째 혹은 두 번째 타이머가 싱글 옵저버블과 함께 트리거되기 전에 언제든 취소할 수 있다.
+* flatMap 연산자를 이용해서, 디스패치의 비동기 클로저로 후프?를 뛰어넘을 필요 없이 타이머 시퀀스를 생성 할 수 있다.
+
+어떤 이점이 있는지 설명이 잘 와닿지 않는데, 정리하자면 interval은 특정 주기로 반복할 때, timer는 특정 시간 이후에 (optional-특정 주기로 반복) 트리거 할 때 사용 할 수 있겠다.
+
+&nbsp;
+
+###Timeouts
