@@ -16,6 +16,8 @@
 
 ### Replaying past elements
 
+####replay()
+
 시퀀스가 아이템을 방출 할 때, 미래의 구독자가 과거의 몇 개 혹은 모든 아이템들을 받게 할 필요가 있을것임. 이게 바로 replay와 replayAll 연산자의 목적임.
 
 ```swift
@@ -91,11 +93,15 @@ next(5)
 
 ### Unlimited replay
 
+####replayAll()
+
 두 번째 replay 연산자는 replayAll() 이다. 주의깊게 써야 함. 버퍼된 요소의 전체 개수가 합리적으로 유지될 것임을 아는 경우에만 사용해야 함. 예를 들어 HTTP 요청 컨텍스트에서 replayAll()을 사용하는게 적절함. 쿼리에서 반환된 데이터를 유지하는 것의 메모리 영향을 대략적으로 안다. 반면에 종료되지 않거나 많은 데이터를 생성하는 시퀀스에 쓰면 메모리가 금방 가득 찰것임. OS에서 앱을 강제 종료 할 수도 있음
 
 &nbsp;
 
 ### Controlled buffering
+
+####buffer(timeSpan:count:scheduler:)
 
 리플레이 가능한 시퀀스를 맛봤으니 통제된 버퍼링을 심화 학습하자.  Buffer(timeSpan:count:scheduler:)를 처음 볼것임. 마찬가지로 몇 가지 상수로 시작하자.
 
@@ -153,6 +159,8 @@ next(0)
 
 ###  Windows of buffered observables
 
+####window(timeSpan:count:scheduler:)
+
 buffer와 비슷한 마지막 버퍼링 테크닉은 window(timeSpan:count:scheduler:)이다. 거의 비슷하지만 다른 점은 배열 대신 버퍼된 요소의 옵저버블을 방출하는 것임. 
 
 ```swift
@@ -208,7 +216,7 @@ completed
 
 &nbsp;
 
-## Time-shifting operators
+## 2. Time-shifting operators
 
 때때로, 시간을 여행할 필요가 있다. RxSwift가 과거 관계의 실수를 고치는데 도움을 줄 수 없는 반면, Time-shifting 연산자는 자가 복제가 가능할 때 까지 잠시동안 멈추게 할 수 있는 능력이 있다.
 
@@ -219,6 +227,8 @@ completed
 &nbsp;
 
 ###Delayed subscriptions
+
+####delayedSubscription(_:scheduler:)
 
 ```swift
 let elementsPerSecond = 1
@@ -263,6 +273,8 @@ Hot과 Cold 옵저버블은 머릿속을 어지럽히는 까다로운 주제임.
 
 ###Delayed elements
 
+####delay(_:scheduler:)
+
 다른 종류의 지연은 전체 시퀀스가 시간 이동을 하도록 한다. 구독을 늦추는 대신, 연산자는 소스 옵저버블을 즉시 구독하지만 특정 시간 동안 모든 이벤트를 지연시킨다. 최종 결과는 구체적인 시간 이동임.
 
 ```swift
@@ -299,7 +311,7 @@ next(5)
 
 &nbsp;
 
-##Time operators
+##3. Time operators
 
 모든 앱에서 일반적으로 필요한건 타이머다. iOS와 macOS는 몇개의 타이밍 솔루션이 있다. 역사적으로 Timer는 일을 해냈지만 혼란스러운 소유권 모델을 갖고 있어서 제대로 하기가 까다로웠다. 최근에는, 디스패치 프레임워크가 디스패치 소스를 사용해서 타이머를 제공했다. 그건 비록 래핑을 하지 않으면 여전히 API가 복잡했지만 그래도 Timer보단 나은 솔루션이다.
 
@@ -310,6 +322,8 @@ RxSwift는 일회용 타이머와 반복 타이머 모두에 간단하고 효과
 &nbsp;
 
 ###Intervals
+
+####interval(_:scheduler:)
 
 위 예시들에서 interval timer를 만들기 위해서  Timer를 몇 번 사용했다. timer를 RxSwift의 Observable.interval(_:scheduler:) 함수로 대체할 수 있다. 이건 무한한 Int값 옵저버블 시퀀스를 생성하고 지정된 스케쥴러에서 선택한 간격으로 전송한다.
 
@@ -335,6 +349,8 @@ RxSwift에서 interval timer를 만드는건 놀랍도록 쉽다. 뿐만아니�
 
 &nbsp;
 ### One-shot or repeating timers
+
+#### timer(_dueTime:period:scheduler:)
 
 더 강력한 타이머 옵저버블을 원한다면 Observable.timer(_dueTime:period:scheduler:) 연산자가 있다. interval과 비슷하지만 몇 가지 특정이 있다.
 
@@ -364,3 +380,72 @@ _ = Observable<Int>
 &nbsp;
 
 ###Timeouts
+
+timeout 이라는 특별한 연산자와 함께 이 시간 기반 연산자 모음을 끝내보자. 이 연산자의 주 목적은 시간 초과(오류) 조건에서 실제 타이머를 의미론적으로 구별하는 것임. 타이머를 이용해서 시간 초과 오류 조건에 대한 처리를 가능하게 해준다는 의미 인듯? 그러므로 지정된 시간 동안 어떤 아이템도 방출되지 않아 시간 초과가 발생하면 RxError.TimeoutError 에러 이벤트를 방출하게 됨. 에러가 잡히지 않으면 시퀀스를 종료함(에러가 잡히지 않는 다는건 소스 시퀀스가 완료 됐다는 건가?)
+
+&nbsp;
+
+다음 장에서 배울 RxCocoa를 이용해서 버튼 탭을 옵저버블 시퀀스로 바꿔보자. 
+
+* 버튼 탭 감지
+* 만약 버튼이 5초 안에 눌리면, 콘솔에 뭔가 출력하고 시퀀스 종료
+* 만약 버튼이 눌리지 않으면 에러 조건을 출력
+
+#### timeout(_:scheduler:)
+
+```swift
+let button = UIButton(type: .system)
+let timeOutSecond: RxTimeInterval = .seconds(3)
+let _ = button
+    .rx.tap
+    .map { _ in "•"}
+    .timeout(timeOutSecond, scheduler: MainScheduler.instance)
+    .subscribe { value in
+        print(value)
+    }
+
+button.sendActions(for: .touchUpInside)
+button.sendActions(for: .touchUpInside)
+/*print
+next(•)
+next(•)
+error(Sequence timeout.)
+*/
+```
+
+만약 버튼을 5초 안에 누르면(그리고 5초안에 뒤이어 누르면), next(•)가 콘솔에 출력된다. 누르기를 멈추고 3초 뒤에 시간초과가 발생하고 error 이벤트가 방출된다.
+
+&nbsp;
+
+
+####timeout(otehr:scheduler:)
+Timeout(_:scheduler:)의 다른 유형은 옵저버블을 취하고 시간초과가 발생하면 에러를 방출하는 대신에 구독을 이 옵저버블로 바꾼다.
+
+&nbsp;
+
+이 유형의 timeout의 많은 사용 사례가 있음. 그 중 하나는 에러 대신에 값을 방출하고 정상적으로 complete하는 것임
+
+&nbsp;
+
+timeout을 아래 와 같이 바꾸면 에러 대신 X요소의 방출과 완료 이벤트를 확인 할 수 있다.
+
+```swift
+let button = UIButton(type: .system)
+let timeOutSecond: RxTimeInterval = .seconds(3)
+let _ = button
+    .rx.tap
+    .map { _ in "•"}
+    .timeout(timeOutSecond, other: Observable.just("X"), scheduler: MainScheduler.instance)
+    .subscribe { value in
+        print(value)
+    }
+
+button.sendActions(for: .touchUpInside)
+button.sendActions(for: .touchUpInside)
+/*print
+next(•)
+next(•)
+next(X)
+completed
+*/
+```
