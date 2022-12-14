@@ -246,7 +246,7 @@ charlotte.score.onNext(100) /// 5...
 
 ### flatMapLatest
 
-flatMapLatest 연산자는 사실 map과 switchLated 연산자의 결합이다. switchLatest는 다음 장 Combining Operators에서 배울건데 살짝 엿보고 가자. switchLatest는 가장 최근의 옵저버블로부터 값을 생성하며 이전 옵저버블에서 구독을 취소한다.
+flatMapLatest 연산자는 사실 map과 switchLatest 연산자의 결합이다. switchLatest는 다음 장 Combining Operators에서 배울건데 살짝 엿보고 가자. switchLatest는 가장 최근의 옵저버블로부터 값을 생성하며 이전 옵저버블에서 구독을 취소한다.
 
 &nbsp;
 

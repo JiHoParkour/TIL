@@ -65,7 +65,7 @@ subscribe 연산자와 비슷하게 on(.next(_:))는 subject에 새로운 next�
 
 ## 2. What are subjects?
 
-subject는 옵저버블이자 옵저버이다. 바로 위에서 subject에 next이벤트를 전달하고 각 이벤트가 구독자에게 떻게 방출되는지 살펴보았다.
+subject는 옵저버블이자 옵저버이다. 바로 위에서 subject에 next이벤트를 전달하고 각 이벤트가 구독자에게 어떻게 방출되는지 살펴보았다.
 
 &nbsp;
 
