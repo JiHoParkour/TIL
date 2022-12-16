@@ -72,16 +72,20 @@ subject는 옵저버블이자 옵저버이다. 바로 위에서 subject에 next�
 다음은 네 가지의 서브젝트이다.
 
 - PublishSubject : 빈 값으로 생성되고 구독자에게 새 요소만을 발행한다.
-- BehaviorSubject : 초기 값을 갖고 생성되고 그 값을 발행하거나 새 구독자에게는 최신 요소를 발행한다.
-- ReplaySubject : 버퍼 사이즈를 갖고 생성되고 사이즈만큼 요소를 유지한다. 그리고 새 구독자에게 그것을 발행한다.
-- AsyncSubject : 오직 시퀀스의 마지막 next이벤트를 subject가 completed이벤트를 전달 받았을 때 발행한다. 드물게 쓰여서 다루지 않을것. 구색맞추기 위해 알아봄
-- &nbsp;
 
-RxSwift는 Replay라는것도 제공한다. PublishRelay와 BehaviorRelay 두 가지가 있는데 각각의 subject를 래핑한다. 그래서 relay는 오직 next이벤트만을 받아서 방출하는 subject이다. completed와 error는 추가할 수 없기 때문에 종료가 없는 시퀀스에 유용하다.
+- BehaviorSubject : 초기 값을 갖고 생성되고 그 값을 발행하거나 새 구독자에게는 최신 요소를 발행한다.
+
+- ReplaySubject : 버퍼 사이즈를 갖고 생성되고 사이즈만큼 요소를 유지한다. 그리고 새 구독자에게 그것을 발행한다.
+
+- AsyncSubject : 오직 시퀀스의 마지막 next이벤트를 subject가 completed이벤트를 전달 받았을 때 발행한다. 드물게 쓰여서 다루지 않을것. 구색맞추기 위해 알아봄
+
+  &nbsp;
+
+RxSwift는 Relay라는것도 제공한다. PublishRelay와 BehaviorRelay 두 가지가 있는데 각각의 subject를 래핑한다. 그래서 relay는 오직 next이벤트만을 받아서 방출하는 subject이다. completed와 error는 추가할 수 없기 때문에 종료가 없는 시퀀스에 유용하다.
 
 &nbsp;
 
-ReRelay는 RxCocoa가 의존하는 별개의 모듈이라는것을 알아두자. 그래서 RxCocoa를 import해야 사용 할 수 있다.
+RxRelay는 RxCocoa가 의존하는 별개의 모듈이라는것을 알아두자. 그래서 RxCocoa를 import해도 사용 할 수 있다.
 
 &nbsp;
 
@@ -153,7 +157,7 @@ BehaviorSubject는 최신 데이터로 뷰를 미리 채우고 싶을 때 유용
 
 ## 5. Workimg with replay subjects
 
-### BehaviorSubject
+### ReplaySubject
 
 ReplaySubject는 캐시나 버퍼에 마지막에 방출했던 요소들을 특정 사이즈 만큼 저장한다. 그리고는 새 구독자에게 버퍼를 재발행한다.
 
@@ -185,9 +189,9 @@ publish, behavior, replay 세 가지 서브젝트로 원하는 대부분을 구�
 
 ## 6. Working with relays
 
-### ReplaySubject
+### Relay
 
-앞에서 relay는 subject를 래핑한다고 배웠다. 다른 서브젝트나 옵저버블과는 달리 accept(*:)를 사용해서 relay에 값을 추가 할 수 있다. 다시 말하면 onNext(*:)를 사용하지 않는다. 왜냐하면 relay는 값만 ‘수락(accept)’을 수 있어서 error나 completed 이벤트는 추가 할 수 없기 때문
+앞에서 relay는 subject를 래핑한다고 배웠다. 다른 서브젝트나 옵저버블과는 달리 accept(:)를 사용해서 relay에 값을 추가 할 수 있다. 다시 말하면 onNext(:)를 사용하지 않는다. 왜냐하면 relay는 값만 ‘수락(accept)’을 수 있어서 error나 completed 이벤트는 추가 할 수 없기 때문
 
 &nbsp;
 
